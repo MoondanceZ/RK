@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EntityFramework.BulkExtensions.EFCore" Version="1.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RK.Framework\RK.Framework.csproj" />
+    <ProjectReference Include="..\RK.Model\RK.Model.csproj" />
+  </ItemGroup>
+
+</Project>
