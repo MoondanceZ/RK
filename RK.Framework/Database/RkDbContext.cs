@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using RK.Model;
 
 namespace RK.Framework.Database
 {
@@ -7,6 +8,13 @@ namespace RK.Framework.Database
         public RkDbContext(DbContextOptions<RkDbContext> options)
             : base(options)
         {
+
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+        }
+        public DbSet<UserInfo> UserInfos { set; get; }
+
     }
 }
