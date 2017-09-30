@@ -10,11 +10,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.6.1" />
+    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\RK.Framework\RK.Framework.csproj" />
+    <ProjectReference Include="..\RK.Model\RK.Model.csproj" />
+    <ProjectReference Include="..\RK.Repository\RK.Repository.csproj" />
+    <ProjectReference Include="..\RK.Service\RK.Service.csproj" />
   </ItemGroup>
 
 </Project>

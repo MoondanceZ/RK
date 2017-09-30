@@ -8,6 +8,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Autofac;
+using RK.Framework.Database.DatabaseFactory;
+using RK.Framework.Database.UnitOfWork;
+using System.Reflection;
+using RK.Framework.Common;
+using Autofac.Extensions.DependencyInjection;
 
 namespace RK.Web
 {
@@ -21,9 +27,35 @@ namespace RK.Web
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            ////添加跨域
+            //services.AddCors();
+
+            // Add Autofac
+            var builder = new ContainerBuilder();
+            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().SingleInstance();
+
+            var repos = Assembly.Load("RK.Repository");
+            builder.RegisterAssemblyTypes(repos, repos)
+                    .Where(t => t.Name.EndsWith("Repository"))
+                    .AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            var srvs = Assembly.Load("RK.Service");
+            builder.RegisterAssemblyTypes(srvs, srvs)
+                    .Where(t => t.Name.EndsWith("Service"))
+                    .AsImplementedInterfaces().InstancePerLifetimeScope();
+
+            builder.Populate(services);
+
+            var container = builder.Build();
+
+            IocContainer.SetContainer(container);
+
+            return new AutofacServiceProvider(container);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
