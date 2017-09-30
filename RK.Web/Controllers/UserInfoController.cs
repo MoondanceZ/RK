@@ -4,14 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RK.Service;
+using RK.Framework.Database.UnitOfWork;
 
 namespace RK.Web.Controllers
 {
     [Route("api/[controller]")]
     public class UserInfoController : Controller
     {
-        private readonly IUserInfoService _userInfoService;
-        public UserInfoController(IUserInfoService userInfoService)
+        private readonly IUserInfoService userInfoService;
+        public UserInfoController(IUserInfoService _userInfoService)
         {
             _userInfoService = userInfoService;
         }

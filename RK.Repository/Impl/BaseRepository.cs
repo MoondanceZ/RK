@@ -26,7 +26,7 @@ namespace RK.Repository.Impl
             get { return dataContext ?? (dataContext = DatabaseFactory.GetDbContext()); }
         }
 
-        protected BaseRepository(IDatabaseFactory databaseFactory)
+        public BaseRepository(IDatabaseFactory databaseFactory)
         {
             DatabaseFactory = databaseFactory;
             dbset = DataContext.Set<T>();

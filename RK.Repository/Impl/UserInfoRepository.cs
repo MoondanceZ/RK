@@ -8,7 +8,7 @@ namespace RK.Repository.Impl
 {
     public class UserInfoRepository : BaseRepository<UserInfo>, IUserInfoRepository
     {
-        protected UserInfoRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
+        public UserInfoRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
         }
     }
