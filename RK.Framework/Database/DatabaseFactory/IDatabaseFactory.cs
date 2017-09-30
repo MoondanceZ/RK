@@ -8,6 +8,6 @@ namespace RK.Framework.Database.DatabaseFactory
 {
     public interface IDatabaseFactory : IDisposable
     {
-        RkDbContext GetDbContext();
+        //RkDbContext GetDbContext();
     }
 }

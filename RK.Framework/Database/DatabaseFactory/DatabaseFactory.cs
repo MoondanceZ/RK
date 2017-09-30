@@ -1,30 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using MySQL.Data.EntityFrameworkCore.Extensions;
+using Microsoft.EntityFrameworkCore.Design;
 using RK.Framework.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RK.Framework.Database.DatabaseFactory
 {
-    public class DatabaseFactory : Disposable, IDatabaseFactory
-    {
-        private RkDbContext DataContext { get; set; }
-        public RkDbContext GetDbContext()
-        {
-            if (DataContext == null)
-            {
-                var configuration = new ConfigurationBuilder().Build();
-                var optionsBuilder = new DbContextOptionsBuilder<RkDbContext>();
-                optionsBuilder.UseMySQL(configuration.GetConnectionString("ConnStr"));
+    public class DatabaseFactory : Disposable, IDatabaseFactory, IDesignTimeDbContextFactory<RkDbContext>
+    {    
+        public RkDbContext DataContext { get; private set; }
 
-                //Ensure database creation
-                var context = new RkDbContext(optionsBuilder.Options);
-                context.Database.EnsureCreated();
-            }
+        public RkDbContext CreateDbContext(string[] args)
+        {
+            var builder = new DbContextOptionsBuilder<RkDbContext>();
+            builder.UseMySql(@"server=(local);userid=root;pwd=123456;port=3306;database=rk;sslmode=none;");
+
+            DataContext = new RkDbContext(builder.Options);
+
             return DataContext;
         }
 

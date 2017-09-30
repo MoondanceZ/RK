@@ -36,8 +36,8 @@ namespace RK.Web
 
             // Add Autofac
             var builder = new ContainerBuilder();
-            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().SingleInstance();
-            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().SingleInstance();
+            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             var repos = Assembly.Load("RK.Repository");
             builder.RegisterAssemblyTypes(repos, repos)
