@@ -1,24 +1,21 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RK.Framework.Database.DatabaseFactory;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace RK.Framework.Database.UnitOfWork
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly IDatabaseFactory databaseFactory;
+        private readonly IDesignTimeDbContextFactory<RkDbContext> databaseFactory;
         private RkDbContext dataContext;
 
-        public UnitOfWork(IDatabaseFactory databaseFactory)
+        public UnitOfWork(IDesignTimeDbContextFactory<RkDbContext> databaseFactory)
         {
             this.databaseFactory = databaseFactory;
         }
 
         protected RkDbContext DataContext
         {
-            get { return dataContext ?? (dataContext = databaseFactory.GetDbContext()); }
+            get { return dataContext ?? (dataContext = databaseFactory.CreateDbContext(null)); }
         }
 
         public void BeginTransaction()

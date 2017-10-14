@@ -1,7 +1,7 @@
 ﻿using EntityFramework.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using RK.Framework.Database;
-using RK.Framework.Database.DatabaseFactory;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace RK.Repository.Impl
         private RkDbContext dataContext;
         private readonly DbSet<T> dbset;
 
-        protected IDatabaseFactory DatabaseFactory
+        protected IDesignTimeDbContextFactory<RkDbContext> DatabaseFactory
         {
             get;
             private set;
@@ -23,10 +23,10 @@ namespace RK.Repository.Impl
 
         protected RkDbContext DataContext
         {
-            get { return dataContext ?? (dataContext = DatabaseFactory.GetDbContext()); }
+            get { return dataContext ?? (dataContext = DatabaseFactory.CreateDbContext(null)); }
         }
 
-        public BaseRepository(IDatabaseFactory databaseFactory)
+        public BaseRepository(IDesignTimeDbContextFactory<RkDbContext> databaseFactory)
         {
             DatabaseFactory = databaseFactory;
             dbset = DataContext.Set<T>();

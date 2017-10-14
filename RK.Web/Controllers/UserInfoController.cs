@@ -5,22 +5,30 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RK.Service;
 using RK.Framework.Database.UnitOfWork;
+using RK.Model;
 
 namespace RK.Web.Controllers
 {
     [Route("api/[controller]")]
     public class UserInfoController : Controller
     {
-        private readonly IUserInfoService userInfoService;
-        public UserInfoController(IUserInfoService _userInfoService)
+        private readonly IUserInfoService _userInfoService;
+        public UserInfoController(IUserInfoService userInfoService)
         {
             _userInfoService = userInfoService;
         }
         // GET api/userInfo
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<UserInfo> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new List<UserInfo>
+            {
+                new UserInfo
+                {
+                    Account = "Sb",
+                    Password ="123456"
+                }
+            };
         }
 
         // GET api/userInfo/5

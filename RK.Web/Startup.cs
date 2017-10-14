@@ -9,11 +9,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Autofac;
-using RK.Framework.Database.DatabaseFactory;
 using RK.Framework.Database.UnitOfWork;
 using System.Reflection;
 using RK.Framework.Common;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore.Design;
+using RK.Framework.Database;
 
 namespace RK.Web
 {
@@ -36,7 +37,7 @@ namespace RK.Web
 
             // Add Autofac
             var builder = new ContainerBuilder();
-            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<DatabaseFactory>().As<IDesignTimeDbContextFactory<RkDbContext>>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             var repos = Assembly.Load("RK.Repository");

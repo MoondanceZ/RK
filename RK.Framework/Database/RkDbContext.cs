@@ -13,6 +13,7 @@ namespace RK.Framework.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
         }
         public DbSet<UserInfo> UserInfos { set; get; }
 

@@ -12,5 +12,12 @@ namespace RK.Service.Impl
         public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository) : base(unitOfWork, repository)
         {
         }
+
+        public UserInfo AddUserInfo(UserInfo userInfo)
+        {
+            _repository.Add(userInfo);
+            _unitOfWork.Commit();
+            return userInfo;
+        }
     }
 }
