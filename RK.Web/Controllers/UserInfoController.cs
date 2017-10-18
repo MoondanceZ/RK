@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RK.Service;
 using RK.Framework.Database.UnitOfWork;
 using RK.Model;
+using NLog;
 
 namespace RK.Web.Controllers
 {
@@ -13,6 +14,7 @@ namespace RK.Web.Controllers
     public class UserInfoController : Controller
     {
         private readonly IUserInfoService _userInfoService;
+        static Logger Logger = LogManager.GetCurrentClassLogger();
         public UserInfoController(IUserInfoService userInfoService)
         {
             _userInfoService = userInfoService;
@@ -21,6 +23,16 @@ namespace RK.Web.Controllers
         [HttpGet]
         public IEnumerable<UserInfo> Get()
         {
+            //Logger.Info("普通信息日志-----------");
+            //Logger.Debug("调试日志-----------");
+            //Logger.Error("错误日志-----------");
+            //Logger.Fatal("异常日志-----------");
+            //Logger.Warn("警告日志-----------");
+            //Logger.Trace("跟踪日志-----------");
+            //Logger.Log(NLog.LogLevel.Warn, "Log日志------------------");
+            //throw new Exception("错误");
+            int a = 0;
+            var b = 100 / a;
             return new List<UserInfo>
             {
                 new UserInfo

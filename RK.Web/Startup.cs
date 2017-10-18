@@ -15,6 +15,9 @@ using RK.Framework.Common;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore.Design;
 using RK.Framework.Database;
+using NLog.Extensions.Logging;
+using NLog.Web;
+using RK.Web.Common.Filters;
 
 namespace RK.Web
 {
@@ -30,7 +33,10 @@ namespace RK.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc(options=>
+            {
+                options.Filters.Add<HttpGlobalExceptionFilter>();
+            });
 
             ////添加跨域
             //services.AddCors();
@@ -60,7 +66,7 @@ namespace RK.Web
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +74,9 @@ namespace RK.Web
             }
 
             app.UseMvc();
+
+            loggerFactory.AddNLog();  //添加Nlog
+            env.ConfigureNLog("NLog.config");
         }
     }
 }
