@@ -18,7 +18,7 @@ namespace RK.Web.Common.Filters
             return Task.Run(() =>
             {
                 //写入日志
-                Logger.Error(new EventId(context.Exception.HResult));
+                Logger.Error(context.Exception.ToString());
 
                 var response = context.HttpContext.Response;
                 if (context.Exception is UnauthorizedAccessException)

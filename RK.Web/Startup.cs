@@ -18,6 +18,7 @@ using RK.Framework.Database;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using RK.Web.Common.Filters;
+using RK.Web.Common.Middleware;
 
 namespace RK.Web
 {
@@ -35,7 +36,7 @@ namespace RK.Web
         {
             services.AddMvc(options=>
             {
-                options.Filters.Add<HttpGlobalExceptionFilter>();
+                //options.Filters.Add<HttpGlobalExceptionFilter>();
             });
 
             ////添加跨域
@@ -72,7 +73,7 @@ namespace RK.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware(typeof(ErrorWrappingMiddleware));
             app.UseMvc();
 
             loggerFactory.AddNLog();  //添加Nlog
