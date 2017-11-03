@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RK.Repository;
-using RK.Framework.Database.UnitOfWork;
+using RK.Framework.Database;
 
 namespace RK.Service.Impl
 {

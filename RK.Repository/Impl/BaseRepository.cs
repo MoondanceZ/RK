@@ -15,7 +15,7 @@ namespace RK.Repository.Impl
         private RkDbContext dataContext;
         private readonly DbSet<T> dbset;
 
-        protected IDesignTimeDbContextFactory<RkDbContext> DatabaseFactory
+        protected IDatabaseFactory DatabaseFactory
         {
             get;
             private set;
@@ -23,10 +23,10 @@ namespace RK.Repository.Impl
 
         protected RkDbContext DataContext
         {
-            get { return dataContext ?? (dataContext = DatabaseFactory.CreateDbContext(null)); }
+            get { return dataContext ?? (dataContext = DatabaseFactory.DataContext); }
         }
 
-        public BaseRepository(IDesignTimeDbContextFactory<RkDbContext> databaseFactory)
+        public BaseRepository(IDatabaseFactory databaseFactory)
         {
             DatabaseFactory = databaseFactory;
             dbset = DataContext.Set<T>();

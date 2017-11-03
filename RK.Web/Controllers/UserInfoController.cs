@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RK.Service;
-using RK.Framework.Database.UnitOfWork;
 using RK.Model;
 using NLog;
 

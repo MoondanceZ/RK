@@ -9,7 +9,7 @@ namespace RK.Repository.Impl
 {
     public class UserInfoRepository : BaseRepository<UserInfo>, IUserInfoRepository
     {
-        public UserInfoRepository(IDesignTimeDbContextFactory<RkDbContext> databaseFactory) : base(databaseFactory)
+        public UserInfoRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
         }
     }
