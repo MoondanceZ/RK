@@ -17,7 +17,7 @@ namespace RK.Framework.Database.Impl
         {
             get
             {
-                return CreateDbContext(null);
+                return _dbContext;
             }
         }
 
