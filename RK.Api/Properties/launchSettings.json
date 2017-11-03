@@ -16,7 +16,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "RK.Web": {
+    "RK.Api": {
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "api/userinfo",

@@ -11,8 +11,8 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    [Migration("20171014052845_UpdateUserInfo")]
-    partial class UpdateUserInfo
+    [Migration("20171103100153_InitMigtation")]
+    partial class InitMigtation
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -35,9 +35,12 @@ namespace RK.Framework.Migrations
                     b.Property<string>("Password")
                         .HasMaxLength(32);
 
+                    b.Property<string>("Phone")
+                        .HasMaxLength(32);
+
                     b.HasKey("Id");
 
-                    b.ToTable("UserInfos");
+                    b.ToTable("UserInfo");
                 });
 #pragma warning restore 612, 618
         }

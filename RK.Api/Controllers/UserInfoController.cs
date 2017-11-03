@@ -4,11 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RK.Service;
-using RK.Framework.Database.UnitOfWork;
 using RK.Model;
 using NLog;
 
-namespace RK.Web.Controllers
+namespace RK.Api.Controllers
 {
     [Route("api/[controller]")]
     public class UserInfoController : Controller
@@ -31,16 +30,13 @@ namespace RK.Web.Controllers
             //Logger.Trace("跟踪日志-----------");
             //Logger.Log(NLog.LogLevel.Warn, "Log日志------------------");
             //throw new Exception("错误");
-            int a = 0;
-            var b = 100 / a;
-            return new List<UserInfo>
+            //int a = 0;
+            //var b = 100 / a;
+            _userInfoService.AddUserInfo(new UserInfo
             {
-                new UserInfo
-                {
-                    Account = "Sb",
-                    Password ="123456"
-                }
-            };
+                Account = "12333"
+            });
+            return _userInfoService.ListAll();
         }
 
         // GET api/userInfo/5

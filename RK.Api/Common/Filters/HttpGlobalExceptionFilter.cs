@@ -8,24 +8,17 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace RK.Web.Common.Filters
+namespace RK.Api.Common.Filters
 {
     public class HttpGlobalExceptionFilter : IAsyncExceptionFilter
     {
-        private readonly ILoggerFactory _loggerFactory;
-        public HttpGlobalExceptionFilter(ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory;
-        }
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
         public Task OnExceptionAsync(ExceptionContext context)
         {
             return Task.Run(() =>
             {
-                //var logger = _loggerFactory.CreateLogger(context.Exception.TargetSite.ReflectedType);
-                var logger = LogManager.GetCurrentClassLogger();
-                logger.Error(context.Exception, context.Exception.Message);
                 //写入日志
-                //logger.LogError(context.Exception, context.Exception.StackTrace);
+                Logger.Error(context.Exception.ToString());
 
                 var response = context.HttpContext.Response;
                 if (context.Exception is UnauthorizedAccessException)

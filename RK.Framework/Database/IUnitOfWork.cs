@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RK.Framework.Database.UnitOfWork
+namespace RK.Framework.Database
 {
     public interface IUnitOfWork
     {

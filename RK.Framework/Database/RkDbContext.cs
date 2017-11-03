@@ -15,7 +15,7 @@ namespace RK.Framework.Database
         {
             base.OnModelCreating(modelBuilder);
         }
-        public DbSet<UserInfo> UserInfos { set; get; }
+        public DbSet<UserInfo> UserInfo { set; get; }
 
     }
 }

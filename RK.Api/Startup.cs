@@ -9,7 +9,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Autofac;
-using RK.Framework.Database.UnitOfWork;
 using System.Reflection;
 using RK.Framework.Common;
 using Autofac.Extensions.DependencyInjection;
@@ -17,9 +16,10 @@ using Microsoft.EntityFrameworkCore.Design;
 using RK.Framework.Database;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using RK.Web.Common.Filters;
+using RK.Api.Common.Middleware;
+using RK.Framework.Database.Impl;
 
-namespace RK.Web
+namespace RK.Api
 {
     public class Startup
     {
@@ -35,7 +35,7 @@ namespace RK.Web
         {
             services.AddMvc(options=>
             {
-                options.Filters.Add<HttpGlobalExceptionFilter>();
+                //options.Filters.Add<HttpGlobalExceptionFilter>();
             });
 
             ////添加跨域
@@ -43,7 +43,7 @@ namespace RK.Web
 
             // Add Autofac
             var builder = new ContainerBuilder();
-            builder.RegisterType<DatabaseFactory>().As<IDesignTimeDbContextFactory<RkDbContext>>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             var repos = Assembly.Load("RK.Repository");
@@ -72,7 +72,7 @@ namespace RK.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            app.UseMiddleware(typeof(ErrorWrappingMiddleware));
             app.UseMvc();
 
             loggerFactory.AddNLog();  //添加Nlog

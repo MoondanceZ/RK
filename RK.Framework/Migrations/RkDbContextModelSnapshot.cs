@@ -34,9 +34,12 @@ namespace RK.Framework.Migrations
                     b.Property<string>("Password")
                         .HasMaxLength(32);
 
+                    b.Property<string>("Phone")
+                        .HasMaxLength(32);
+
                     b.HasKey("Id");
 
-                    b.ToTable("UserInfos");
+                    b.ToTable("UserInfo");
                 });
 #pragma warning restore 612, 618
         }
