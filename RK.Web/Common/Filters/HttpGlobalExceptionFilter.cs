@@ -12,13 +12,20 @@ namespace RK.Web.Common.Filters
 {
     public class HttpGlobalExceptionFilter : IAsyncExceptionFilter
     {
-        private static Logger Logger = LogManager.GetCurrentClassLogger();
+        private readonly ILoggerFactory _loggerFactory;
+        public HttpGlobalExceptionFilter(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
         public Task OnExceptionAsync(ExceptionContext context)
         {
             return Task.Run(() =>
             {
+                //var logger = _loggerFactory.CreateLogger(context.Exception.TargetSite.ReflectedType);
+                var logger = LogManager.GetCurrentClassLogger();
+                logger.Error(context.Exception, context.Exception.Message);
                 //写入日志
-                Logger.Error(new EventId(context.Exception.HResult));
+                //logger.LogError(context.Exception, context.Exception.StackTrace);
 
                 var response = context.HttpContext.Response;
                 if (context.Exception is UnauthorizedAccessException)
