@@ -12,7 +12,7 @@ namespace RK.Repository.Impl
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private RkDbContext dataContext;
+        private readonly RkDbContext dataContext;
         private readonly DbSet<T> dbset;
 
         protected IDatabaseFactory DatabaseFactory
@@ -23,12 +23,16 @@ namespace RK.Repository.Impl
 
         protected RkDbContext DataContext
         {
-            get { return dataContext ?? (dataContext = DatabaseFactory.DataContext); }
+            get
+            {
+                return dataContext;
+            }
         }
 
         public BaseRepository(IDatabaseFactory databaseFactory)
-        {
+        {            
             DatabaseFactory = databaseFactory;
+            dataContext = databaseFactory.DataContext;
             dbset = DataContext.Set<T>();
         }
 

@@ -6,16 +6,20 @@ namespace RK.Framework.Database.Impl
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IDatabaseFactory databaseFactory;
-        private RkDbContext dataContext;
+        private readonly RkDbContext dataContext;
 
         public UnitOfWork(IDatabaseFactory databaseFactory)
         {
             this.databaseFactory = databaseFactory;
+            this.dataContext = databaseFactory.DataContext;
         }
 
         protected RkDbContext DataContext
         {
-            get { return dataContext ?? (dataContext = databaseFactory.DataContext); }
+            get
+            {
+                return dataContext;
+            }
         }
 
         public void BeginTransaction()
