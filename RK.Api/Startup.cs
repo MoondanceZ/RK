@@ -16,10 +16,10 @@ using Microsoft.EntityFrameworkCore.Design;
 using RK.Framework.Database;
 using NLog.Extensions.Logging;
 using NLog.Web;
-using RK.Web.Common.Middleware;
+using RK.Api.Common.Middleware;
 using RK.Framework.Database.Impl;
 
-namespace RK.Web
+namespace RK.Api
 {
     public class Startup
     {

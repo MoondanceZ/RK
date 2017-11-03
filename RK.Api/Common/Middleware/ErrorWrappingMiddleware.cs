@@ -8,7 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace RK.Web.Common.Middleware
+namespace RK.Api.Common.Middleware
 {
     public class ErrorWrappingMiddleware
     {

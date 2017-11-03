@@ -8,5 +8,6 @@ namespace RK.Service
     public interface IUserInfoService : IBaseService<UserInfo>
     {
         UserInfo AddUserInfo(UserInfo userInfo);
+        List<UserInfo> ListAll();
     }
 }
