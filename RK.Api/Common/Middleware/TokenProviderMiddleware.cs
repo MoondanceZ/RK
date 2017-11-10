@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using Newtonsoft.Json;
+using RK.Framework.Common;
 using RK.Service;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -136,12 +137,9 @@ namespace RK.Api.Common.Middleware
         /// <returns></returns>
         private async Task ReturnBadRequest(HttpContext context)
         {
-            context.Response.StatusCode = 200;
-            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            {
-                Status = false,
-                Message = "认证失败"
-            }));
+            context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+            context.Response.ContentType = "application/json;charset=utf-8";
+            await context.Response.WriteAsync(JsonHelper.Serialize(ReturnStatus.Error("认证失败")));
         }
 
         /// <summary>
@@ -182,7 +180,7 @@ namespace RK.Api.Common.Middleware
                 expires_in = (int)_options.Expiration.TotalSeconds,
                 token_type = "Bearer"
             };
-            return JsonConvert.SerializeObject(response, new JsonSerializerSettings { Formatting = Formatting.Indented });
+            return JsonHelper.Serialize(response);
         }
 
     }
