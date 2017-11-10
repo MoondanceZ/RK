@@ -9,5 +9,6 @@ namespace RK.Service
     {
         UserInfo AddUserInfo(UserInfo userInfo);
         List<UserInfo> ListAll();
+        bool Auth(string username, string password);
     }
 }

@@ -21,6 +21,11 @@ namespace RK.Service.Impl
             return userInfo;
         }
 
+        public bool Auth(string username, string password)
+        {
+            return true;
+        }
+
         public List<UserInfo> ListAll()
         {
             var list = _repository.GetAll();

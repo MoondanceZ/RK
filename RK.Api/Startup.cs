@@ -33,7 +33,7 @@ namespace RK.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc(options=>
+            services.AddMvc(options =>
             {
                 //options.Filters.Add<HttpGlobalExceptionFilter>();
             });
@@ -72,6 +72,8 @@ namespace RK.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseMiddleware(typeof(TokenProviderMiddleware));
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
             app.UseMvc();
 
