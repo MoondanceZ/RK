@@ -18,6 +18,9 @@ using NLog.Extensions.Logging;
 using NLog.Web;
 using RK.Api.Common.Middleware;
 using RK.Framework.Database.Impl;
+using System.Security.Cryptography;
+using Microsoft.IdentityModel.Tokens;
+using RK.Api.Common.OAuth2;
 
 namespace RK.Api
 {
@@ -33,6 +36,24 @@ namespace RK.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            //RSA：证书长度2048以上，否则抛异常
+            //配置AccessToken的加密证书
+            var rsa = new RSACryptoServiceProvider();
+            //从配置文件获取加密证书
+            rsa.ImportCspBlob(Convert.FromBase64String(Configuration["SigningCredential"]));
+            //IdentityServer4授权服务配置
+            services.AddIdentityServer()
+                .AddSigningCredential(new RsaSecurityKey(rsa))  //设置加密证书
+                
+                //.AddTemporarySigningCredential()    //测试的时候可使用临时的证书
+                .AddInMemoryScopes(OAuth2Config.GetScopes())
+                .AddInMemoryClients(OAuth2Config.GetClients())
+
+                //如果是client credentials模式那么就不需要设置验证User了
+                .AddResourceOwnerValidator<MyUserValidator>() //User验证接口
+                                                              //.AddInMemoryUsers(OAuth2Config.GetUsers())    //将固定的Users加入到内存中
+                ;
+
             services.AddMvc(options =>
             {
                 //options.Filters.Add<HttpGlobalExceptionFilter>();
@@ -42,6 +63,7 @@ namespace RK.Api
             //services.AddCors();
 
             // Add Autofac
+            #region  Add Autofac
             var builder = new ContainerBuilder();
             builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().InstancePerLifetimeScope();
@@ -63,6 +85,7 @@ namespace RK.Api
             IocContainer.SetContainer(container);
 
             return new AutofacServiceProvider(container);
+            #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
