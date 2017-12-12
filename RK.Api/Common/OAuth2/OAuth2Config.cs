@@ -9,16 +9,16 @@ namespace RK.Api.Common.OAuth2
 {
     public class OAuth2Config
     {
-        public static IEnumerable<Scope> GetScopes()
+        public static IEnumerable<ApiResource> GetApiResources()
         {
-            return new List<Scope>
+            return new List<ApiResource>
             {
-                new Scope
+                new ApiResource
                 {
                     Name = "rk",
                     Description = "Round King API",
                 },
-                new Scope
+                new ApiResource
                 {                    
                     //如果想带有RefreshToken，那么必须设置：StandardScopes.OfflineAccess                
                     Name = StandardScopes.OfflineAccess
