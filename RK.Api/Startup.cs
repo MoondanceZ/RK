@@ -21,6 +21,7 @@ using RK.Framework.Database.Impl;
 using System.Security.Cryptography;
 using Microsoft.IdentityModel.Tokens;
 using RK.Api.Common.OAuth2;
+using IdentityServer4.AccessTokenValidation;
 
 namespace RK.Api
 {
@@ -51,14 +52,12 @@ namespace RK.Api
                 .AddInMemoryClients(OAuth2Config.GetClients())
 
                 //如果是client credentials模式那么就不需要设置验证User了
-                .AddResourceOwnerValidator<UserInfoValidator>() //User验证接口
-                //.AddTestUsers(OAuth2Config.GetUsers())    //将固定的Users加入到内存中
-                ;
+                .AddResourceOwnerValidator<UserInfoValidator>();
 
-            services.AddMvc(options =>
-            {
-                //options.Filters.Add<HttpGlobalExceptionFilter>();
-            });
+            services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
+                .AddIdentityServerAuthentication();
+
+            services.AddMvc();
 
             ////添加跨域
             //services.AddCors();
