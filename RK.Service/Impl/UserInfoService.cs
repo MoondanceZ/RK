@@ -26,6 +26,11 @@ namespace RK.Service.Impl
             return true;
         }
 
+        public UserInfo GetUserByAccountAndPassword(string account, string password)
+        {
+            return _repository.Get(m => m.Account == account && m.Password == password);
+        }
+
         public List<UserInfo> ListAll()
         {
             var list = _repository.GetAll();

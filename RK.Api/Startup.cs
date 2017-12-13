@@ -50,7 +50,7 @@ namespace RK.Api
                 .AddInMemoryClients(OAuth2Config.GetClients())
 
                 //如果是client credentials模式那么就不需要设置验证User了
-                //.AddResourceOwnerValidator<MyUserValidator>() //User验证接口
+                .AddResourceOwnerValidator<UserInfoValidator>() //User验证接口
                 //.AddInMemoryUsers(OAuth2Config.GetUsers())    //将固定的Users加入到内存中
                 ;
 
@@ -96,7 +96,10 @@ namespace RK.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseMiddleware(typeof(TokenProviderMiddleware));
+            //使用IdentityServer4的授权服务
+            app.UseIdentityServer();
+
+            //app.UseMiddleware(typeof(TokenProviderMiddleware));
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
             app.UseMvc();
 

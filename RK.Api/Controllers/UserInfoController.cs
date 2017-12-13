@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using RK.Service;
 using RK.Model;
 using NLog;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RK.Api.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     public class UserInfoController : Controller
     {
@@ -32,10 +34,10 @@ namespace RK.Api.Controllers
             //throw new Exception("错误");
             //int a = 0;
             //var b = 100 / a;
-            _userInfoService.AddUserInfo(new UserInfo
-            {
-                Account = "12333"
-            });
+            //_userInfoService.AddUserInfo(new UserInfo
+            //{
+            //    Account = "12333"
+            //});
             return _userInfoService.ListAll();
         }
 
