@@ -10,6 +10,6 @@ namespace RK.Service
         UserInfo AddUserInfo(UserInfo userInfo);
         List<UserInfo> ListAll();
         bool Auth(string username, string password);
-        UserInfo GetUserByAccountAndPassword(string account, string password);
+        UserInfo GetUserByAccount(string account);
     }
 }

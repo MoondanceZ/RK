@@ -17,16 +17,30 @@ namespace RK.Api.Common.OAuth2
         }
         public Task ValidateAsync(ResourceOwnerPasswordValidationContext context)
         {
-            var userInfo = _userInfoService.GetUserByAccountAndPassword(context.UserName, context.Password);
-            if (userInfo != null)
+            return Task.Run(() =>
             {
-                context.Result = new GrantValidationResult();
-            }
-            else
-            {
-                context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "invalid custom credential");
-            }
-            return Task.FromResult(0);
+                try
+                {
+                    //get your user model from db (by username - in my case its email)
+                    var userInfo = _userInfoService.GetUserByAccount(context.UserName);
+                    if (userInfo != null)
+                    {
+                        //check if password match - remember to hash password if stored as hash in db
+                        if (userInfo.Password == context.Password)
+                        {
+                            //set the result
+                            context.Result = new GrantValidationResult();
+                        }
+
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Incorrect password");
+                    }
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "User does not exist.");
+                }
+                catch (Exception)
+                {
+                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid username or password");
+                }
+            });            
         }
     }
 }
