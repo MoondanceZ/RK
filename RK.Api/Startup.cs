@@ -44,14 +44,15 @@ namespace RK.Api
             //IdentityServer4授权服务配置
             services.AddIdentityServer()
                 .AddSigningCredential(new RsaSecurityKey(rsa))  //设置加密证书
-                
+
                 //.AddTemporarySigningCredential()    //测试的时候可使用临时的证书
+                .AddInMemoryIdentityResources(OAuth2Config.GetIdentityResources())
                 .AddInMemoryApiResources(OAuth2Config.GetApiResources())
                 .AddInMemoryClients(OAuth2Config.GetClients())
 
                 //如果是client credentials模式那么就不需要设置验证User了
                 .AddResourceOwnerValidator<UserInfoValidator>() //User验证接口
-                //.AddInMemoryUsers(OAuth2Config.GetUsers())    //将固定的Users加入到内存中
+                //.AddTestUsers(OAuth2Config.GetUsers())    //将固定的Users加入到内存中
                 ;
 
             services.AddMvc(options =>

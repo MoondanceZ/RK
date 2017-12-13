@@ -9,6 +9,16 @@ namespace RK.Api.Common.OAuth2
 {
     public class OAuth2Config
     {
+        //定义系统中的资源
+        public static IEnumerable<IdentityResource> GetIdentityResources()
+        {
+            return new List<IdentityResource>
+            {
+                new IdentityResources.OpenId(),
+                new IdentityResources.Profile(),
+            };
+        }
+
         public static IEnumerable<ApiResource> GetApiResources()
         {
             return new List<ApiResource>
@@ -68,6 +78,8 @@ namespace RK.Api.Common.OAuth2
                         "rk",
                         //如果想带有RefreshToken，那么必须设置：StandardScopes.OfflineAccess
                         StandardScopes.OfflineAccess,
+                        StandardScopes.OpenId,
+                        StandardScopes.Profile
                     },
                     //AccessTokenLifetime = 3600, //AccessToken的过期时间， in seconds (defaults to 3600 seconds / 1 hour)
                     //AbsoluteRefreshTokenLifetime = 60, //RefreshToken的最大过期时间，就算你使用了TokenUsage.OneTimeOnly模式，更新的RefreshToken最大期限也是为这个属性设置的(就是6月30日就得要过期[根据服务器时间]，你用旧的RefreshToken重新获取了新RefreshToken，新RefreshToken过期时间也是6月30日)， in seconds. Defaults to 2592000 seconds / 30 day
