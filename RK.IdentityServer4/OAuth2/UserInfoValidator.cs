@@ -29,18 +29,23 @@ namespace RK.IdentityServer4.OAuth2
                         if (userInfo.Password == context.Password)
                         {
                             //set the result
-                            context.Result = new GrantValidationResult();
+                            context.Result = new GrantValidationResult(subject: context.UserName, authenticationMethod: "Resource Owner Password");
                         }
-
-                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Incorrect password");
+                        else
+                        {
+                            context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Incorrect password");
+                        }
                     }
-                    context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "User does not exist.");
+                    else
+                    {
+                        context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "User does not exist.");
+                    }
                 }
                 catch (Exception)
                 {
                     context.Result = new GrantValidationResult(TokenRequestErrors.InvalidGrant, "Invalid username or password");
                 }
-            });            
+            });
         }
     }
 }
