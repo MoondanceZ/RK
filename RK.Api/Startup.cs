@@ -85,6 +85,7 @@ namespace RK.Api
             //app.UseMiddleware(typeof(TokenProviderMiddleware));
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
             app.UseMvc();
+            app.UseMvcWithDefaultRoute();
 
             loggerFactory.AddNLog();  //添加Nlog
             env.ConfigureNLog("NLog.config");
