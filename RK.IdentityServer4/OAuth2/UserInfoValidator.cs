@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace RK.Api.Common.OAuth2
+namespace RK.IdentityServer4.OAuth2
 {
     public class UserInfoValidator : IResourceOwnerPasswordValidator
     {

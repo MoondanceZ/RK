@@ -1,21 +1,23 @@
-﻿using Autofac;
-using Autofac.Extensions.DependencyInjection;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using NLog.Extensions.Logging;
-using NLog.Web;
-using RK.Api.Common.Middleware;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Security.Cryptography;
+using RK.IdentityServer4.OAuth2;
 using RK.Framework.Common;
-using RK.Framework.Database;
+using Autofac;
 using RK.Framework.Database.Impl;
-using System;
-using System.Linq;
 using System.Reflection;
+using RK.Framework.Database;
+using Autofac.Extensions.DependencyInjection;
 
-namespace RK.Api
+namespace RK.IdentityServer4
 {
     public class Startup
     {
@@ -25,28 +27,28 @@ namespace RK.Api
         }
 
         public IConfiguration Configuration { get; }
-
         // This method gets called by the runtime. Use this method to add services to the container.
+        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters();
+            //RSA：证书长度2048以上，否则抛异常
+            //配置AccessToken的加密证书
+            var rsa = new RSACryptoServiceProvider();
+            //从配置文件获取加密证书
+            rsa.ImportCspBlob(Convert.FromBase64String(Configuration["SigningCredential"]));
+            //IdentityServer4授权服务配置
+            services.AddIdentityServer()
+                .AddSigningCredential(new RsaSecurityKey(rsa))  //设置加密证书
 
-            services.AddAuthentication("Bearer")
-                .AddIdentityServerAuthentication(options =>
-                {
-                    options.Authority = "http://localhost:13381";
-                    options.RequireHttpsMetadata = false;
+                //.AddTemporarySigningCredential()    //测试的时候可使用临时的证书
+                .AddInMemoryIdentityResources(OAuth2Config.GetIdentityResources())
+                .AddInMemoryApiResources(OAuth2Config.GetApiResources())
+                .AddInMemoryClients(OAuth2Config.GetClients())
 
-                    options.ApiName = "rk";
-                });
-            services.AddMvc();
+                //如果是client credentials模式那么就不需要设置验证User了
+                .AddResourceOwnerValidator<UserInfoValidator>();
 
-            ////添加跨域
-            //services.AddCors();
 
-            // Add Autofac
             #region  Add Autofac
             var builder = new ContainerBuilder();
             builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
@@ -66,28 +68,21 @@ namespace RK.Api
 
             var container = builder.Build();
 
-            IocContainer.SetContainer(container);           
+            IocContainer.SetContainer(container);
 
             return new AutofacServiceProvider(container);
             #endregion
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            
-            app.UseAuthentication();
 
-            //app.UseMiddleware(typeof(TokenProviderMiddleware));
-            app.UseMiddleware(typeof(ErrorWrappingMiddleware));
-            app.UseMvc();
-
-            loggerFactory.AddNLog();  //添加Nlog
-            env.ConfigureNLog("NLog.config");
+            app.UseIdentityServer();
         }
     }
 }

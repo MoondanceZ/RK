@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using static IdentityServer4.IdentityServerConstants;
 
-namespace RK.Api.Common.OAuth2
+namespace RK.IdentityServer4.OAuth2
 {
     public class OAuth2Config
     {

@@ -6,3 +6,9 @@ services:
     build:
       context: ./RK.Web
       dockerfile: Dockerfile
+
+  rk.identityserver4:
+    image: rk.identityserver4
+    build:
+      context: ./../RK.IdentityServer4
+      dockerfile: Dockerfile
