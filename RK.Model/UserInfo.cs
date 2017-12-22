@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RK.Model
 {
@@ -15,6 +16,7 @@ namespace RK.Model
         public string Email { get; set; }
         [StringLength(32)]
         public string Phone { get; set; }
-        public DateTime CreatedTime { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime UpdatedTime { get; set; }
     }
 }

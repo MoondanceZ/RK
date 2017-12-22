@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace RK.Model
@@ -13,6 +14,10 @@ namespace RK.Model
         /// 类型:1,收入; 2,支出
         /// </summary>
         public int Type { get; set; }
+        /// <summary>
+        /// 记录外键ID
+        /// </summary>
+        public int RecordTypeId { get; set; }
         /// <summary>
         /// 记录
         /// </summary>
@@ -31,9 +36,10 @@ namespace RK.Model
         /// </summary>
         public int Status { get; set; }
         /// <summary>
-        /// 创建时间
+        /// 更新时间
         /// </summary>
-        public DateTime CreatedTime { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime UpdatedTime { get; set; }
         /// <summary>
         /// 删除时间
         /// </summary>

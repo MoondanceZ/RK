@@ -27,9 +27,9 @@ namespace RK.Framework.Migrations
 
                     b.Property<decimal>("Amount");
 
-                    b.Property<DateTime>("CreatedTime");
-
                     b.Property<DateTime>("DeletedTime");
+
+                    b.Property<int>("RecordTypeId");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(1000);
@@ -38,16 +38,23 @@ namespace RK.Framework.Migrations
 
                     b.Property<int>("Type");
 
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
+
                     b.Property<int>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RecordTypeId");
 
                     b.ToTable("Record");
                 });
 
             modelBuilder.Entity("RK.Model.RecordType", b =>
                 {
-                    b.Property<int>("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
 
                     b.Property<string>("IconCss");
 
@@ -68,8 +75,6 @@ namespace RK.Framework.Migrations
                     b.Property<string>("Account")
                         .HasMaxLength(20);
 
-                    b.Property<DateTime>("CreatedTime");
-
                     b.Property<string>("Email")
                         .HasMaxLength(32);
 
@@ -79,16 +84,20 @@ namespace RK.Framework.Migrations
                     b.Property<string>("Phone")
                         .HasMaxLength(32);
 
+                    b.Property<DateTime>("UpdatedTime")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
+
                     b.HasKey("Id");
 
                     b.ToTable("UserInfo");
                 });
 
-            modelBuilder.Entity("RK.Model.RecordType", b =>
+            modelBuilder.Entity("RK.Model.Record", b =>
                 {
-                    b.HasOne("RK.Model.Record", "Record")
-                        .WithOne("RecordType")
-                        .HasForeignKey("RK.Model.RecordType", "Id")
+                    b.HasOne("RK.Model.RecordType", "RecordType")
+                        .WithMany()
+                        .HasForeignKey("RecordTypeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
