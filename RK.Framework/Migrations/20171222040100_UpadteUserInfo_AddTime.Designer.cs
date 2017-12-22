@@ -11,9 +11,10 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    partial class RkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171222040100_UpadteUserInfo_AddTime")]
+    partial class UpadteUserInfo_AddTime
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

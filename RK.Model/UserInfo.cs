@@ -15,5 +15,6 @@ namespace RK.Model
         public string Email { get; set; }
         [StringLength(32)]
         public string Phone { get; set; }
+        public DateTime CreatedTime { get; set; }
     }
 }

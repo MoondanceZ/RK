@@ -11,9 +11,10 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    partial class RkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20171222035847_Add_Record")]
+    partial class Add_Record
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,8 +68,6 @@ namespace RK.Framework.Migrations
 
                     b.Property<string>("Account")
                         .HasMaxLength(20);
-
-                    b.Property<DateTime>("CreatedTime");
 
                     b.Property<string>("Email")
                         .HasMaxLength(32);
