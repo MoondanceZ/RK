@@ -34,7 +34,7 @@ namespace RK.Framework.Database.Impl
 
             //Ensure database creation
             var dataContext = new RkDbContext(builder.Options);
-            dataContext.Database.EnsureCreated();
+            //dataContext.Database.EnsureCreated();  //删除这句  因为执行 Update-Database 报错
             return dataContext;
         }
     }

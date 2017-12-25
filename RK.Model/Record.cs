@@ -13,6 +13,7 @@ namespace RK.Model
         /// <summary>
         /// 类型:1,收入; 2,支出
         /// </summary>
+        [Required]
         public int Type { get; set; }
         /// <summary>
         /// 记录外键ID
@@ -25,6 +26,7 @@ namespace RK.Model
         /// <summary>
         /// 金额
         /// </summary>
+        [Required]
         public decimal Amount { get; set; }
         /// <summary>
         /// 备注

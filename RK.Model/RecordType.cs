@@ -10,8 +10,12 @@ namespace RK.Model
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         public string Name { get; set; }
+        [Required]
         public string IconName { get; set; }
-        public string IconCss { get; set; }       
+        [Required]
+        public string IconCss { get; set; }
+        public int? UserId { get; set; }
     }
 }

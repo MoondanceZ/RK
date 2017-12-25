@@ -8,14 +8,17 @@ namespace RK.Model
     {
         [Key]
         public int Id { get; set; }
+        [Required]
         [StringLength(20)]
         public string Account { get; set; }
+        [Required]
         [StringLength(32)]
         public string Password { get; set; }
         [StringLength(32)]
         public string Email { get; set; }
         [StringLength(32)]
         public string Phone { get; set; }
+        public int Sex { get; set; }
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime UpdatedTime { get; set; }
     }
