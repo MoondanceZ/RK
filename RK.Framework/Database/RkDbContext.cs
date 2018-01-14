@@ -13,10 +13,12 @@ namespace RK.Framework.Database
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AccountRecord>().HasQueryFilter(e => e.Status == 1);
+            modelBuilder.Entity<AccountType>().HasQueryFilter(e => e.Status == 1);
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<UserInfo> UserInfo { set; get; }
-        public DbSet<Record> Record { get; set; }
-        public DbSet<RecordType> RecordType { get; set; }
+        public DbSet<AccountRecord> AccountRecord { get; set; }
+        public DbSet<AccountType> AccountType { get; set; }
     }
 }

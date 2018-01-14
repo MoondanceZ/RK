@@ -6,7 +6,7 @@ using System.Text;
 
 namespace RK.Model
 {
-    public class Record
+    public class AccountRecord
     {
         [Key]
         public int Id { get; set; }
@@ -18,11 +18,11 @@ namespace RK.Model
         /// <summary>
         /// 记录外键ID
         /// </summary>
-        public int RecordTypeId { get; set; }
+        public int AccountRecordTypeId { get; set; }
         /// <summary>
         /// 记录
         /// </summary>
-        public virtual RecordType RecordType { get; set; }
+        public virtual AccountType RecordType { get; set; }
         /// <summary>
         /// 金额
         /// </summary>
@@ -31,7 +31,7 @@ namespace RK.Model
         /// <summary>
         /// 备注
         /// </summary>
-        [MaxLength(1000)]
+        [MaxLength(200)]
         public string Remark { get; set; }
         /// <summary>
         /// 状态: -1,删除;1,正常;0,禁用
@@ -49,6 +49,7 @@ namespace RK.Model
         /// <summary>
         /// 用户Id
         /// </summary>
+        [Required]
         public int UserId { get; set; }
 
     }

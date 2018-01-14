@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using RK.Api.Common.Middleware;
@@ -30,8 +31,7 @@ namespace RK.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddMvcCore()
-                .AddAuthorization()
-                .AddJsonFormatters();
+                .AddAuthorization();
 
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
@@ -41,10 +41,15 @@ namespace RK.Api
 
                     options.ApiName = "rk";
                 });
-            services.AddMvc();
+            services.AddMvc()                
+                .AddJsonOptions(options =>
+                {
+                    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                }); 
 
-            ////添加跨域
-            //services.AddCors();
+            //添加跨域
+            services.AddCors();
 
             // Add Autofac
             #region  Add Autofac
@@ -84,7 +89,12 @@ namespace RK.Api
 
             //app.UseMiddleware(typeof(TokenProviderMiddleware));
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute(
+                    name: "default",
+                    template: "{controller}/{action}/{id?}");
+            });
 
             loggerFactory.AddNLog();  //添加Nlog
             env.ConfigureNLog("NLog.config");

@@ -6,7 +6,7 @@ namespace RK.Framework.Common
 {
     public class ReturnStatus
     {
-        public bool Status { get; set; }
+        public bool IsSuccess { get; set; }
         public string ErrorCode { get; set; }
         public string Message { get; set; }
         public string ErrorMessage { get; set; }
@@ -16,7 +16,7 @@ namespace RK.Framework.Common
         {
             return new ReturnStatus
             {
-                Status = false,
+                IsSuccess = false,
                 ErrorCode = errorCode,
                 Message = message,
                 ErrorMessage = message
@@ -27,7 +27,7 @@ namespace RK.Framework.Common
         {
             return new ReturnStatus
             {
-                Status = true,
+                IsSuccess = true,
                 ErrorCode = null,
                 Message = message,
                 Url = url
@@ -41,7 +41,7 @@ namespace RK.Framework.Common
         {
             return new ReturnStatus<T>
             {
-                Status = true,
+                IsSuccess = true,
                 ErrorCode = null,
                 Message = message,
                 Data = data,
