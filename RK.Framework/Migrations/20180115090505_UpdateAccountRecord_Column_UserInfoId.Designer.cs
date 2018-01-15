@@ -11,9 +11,10 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    partial class RkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180115090505_UpdateAccountRecord_Column_UserInfoId")]
+    partial class UpdateAccountRecord_Column_UserInfoId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

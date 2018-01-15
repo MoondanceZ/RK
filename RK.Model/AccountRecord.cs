@@ -50,7 +50,7 @@ namespace RK.Model
         /// 用户Id
         /// </summary>
         [Required]
-        public int UserId { get; set; }
+        public int UserInfoId { get; set; }
 
     }
 }

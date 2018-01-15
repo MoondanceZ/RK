@@ -7,6 +7,7 @@ using RK.Service;
 using RK.Model;
 using Microsoft.AspNetCore.Authorization;
 using RK.Framework.Common;
+using RK.Model.Dto.Request;
 
 namespace RK.Api.Controllers
 {
@@ -24,6 +25,12 @@ namespace RK.Api.Controllers
         public ReturnStatus<List<AccountType>> Types(int userId)
         {
             return ReturnStatus<List<AccountType>>.Success(string.Empty, _accountRecordTypeService.GetAccountRecordTypes(userId).ToList());
+        }
+
+        [HttpPost]
+        public ReturnStatus Post(AddAccountRequest request)
+        {
+            return null;
         }
     }
 }
