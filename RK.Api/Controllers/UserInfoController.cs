@@ -15,7 +15,7 @@ namespace RK.Api.Controllers
     public class UserInfoController : Controller
     {
         private readonly IUserInfoService _userInfoService;
-        static Logger Logger = LogManager.GetCurrentClassLogger();
+        private static Logger Logger = LogManager.GetCurrentClassLogger();
         public UserInfoController(IUserInfoService userInfoService)
         {
             _userInfoService = userInfoService;

@@ -11,9 +11,10 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    partial class RkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180115130519_UpdateAccountRecord_Column")]
+    partial class UpdateAccountRecord_Column
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -27,7 +28,9 @@ namespace RK.Framework.Migrations
 
                     b.Property<string>("AccountDate");
 
-                    b.Property<int>("AccountTypeId");
+                    b.Property<int>("AccountRecordTypeId");
+
+                    b.Property<int?>("AccountTypeId");
 
                     b.Property<decimal>("Amount");
 
@@ -109,8 +112,7 @@ namespace RK.Framework.Migrations
                 {
                     b.HasOne("RK.Model.AccountType", "AccountType")
                         .WithMany()
-                        .HasForeignKey("AccountTypeId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("AccountTypeId");
                 });
 #pragma warning restore 612, 618
         }

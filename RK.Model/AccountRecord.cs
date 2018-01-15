@@ -18,11 +18,11 @@ namespace RK.Model
         /// <summary>
         /// 记录外键ID
         /// </summary>
-        public int AccountRecordTypeId { get; set; }
+        public int AccountTypeId { get; set; }
         /// <summary>
         /// 记录
         /// </summary>
-        public virtual AccountType RecordType { get; set; }
+        public virtual AccountType AccountType { get; set; }
         /// <summary>
         /// 金额
         /// </summary>
@@ -37,6 +37,10 @@ namespace RK.Model
         /// 状态: -1,删除;1,正常;0,禁用
         /// </summary>
         public int Status { get; set; }
+        /// <summary>
+        /// 记录账单时间
+        /// </summary>
+        public string AccountDate { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>

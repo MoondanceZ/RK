@@ -86,16 +86,6 @@ namespace RK.Repository.Impl
             dbset.RemoveRange(entities);
         }
 
-        public virtual T GetById(long id)
-        {
-            return dbset.Find(id);
-        }
-
-        public virtual T GetById(string id)
-        {
-            return dbset.Find(id);
-        }
-
         public virtual IEnumerable<T> GetAll()
         {
             return dbset.ToList();

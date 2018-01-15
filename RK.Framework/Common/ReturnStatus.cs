@@ -9,8 +9,6 @@ namespace RK.Framework.Common
         public bool IsSuccess { get; set; }
         public string ErrorCode { get; set; }
         public string Message { get; set; }
-        public string ErrorMessage { get; set; }
-        public string Url { get; set; }
 
         public static ReturnStatus Error(string message, string errorCode = null)
         {
@@ -18,34 +16,41 @@ namespace RK.Framework.Common
             {
                 IsSuccess = false,
                 ErrorCode = errorCode,
-                Message = message,
-                ErrorMessage = message
+                Message = message
             };
         }
 
-        public static ReturnStatus Success(string message, string url = "")
+        public static ReturnStatus Success(string message)
         {
             return new ReturnStatus
             {
                 IsSuccess = true,
                 ErrorCode = null,
                 Message = message,
-                Url = url
             };
         }
     }
     public class ReturnStatus<T> : ReturnStatus where T : class, new()
     {
         public T Data { get; set; }
-        public static ReturnStatus<T> Success(string message, T data, string url = "")
+        public static ReturnStatus<T> Success(string message, T data)
         {
             return new ReturnStatus<T>
             {
                 IsSuccess = true,
                 ErrorCode = null,
                 Message = message,
-                Data = data,
-                Url = url
+                Data = data
+            };
+        }
+
+        public new static ReturnStatus<T> Error(string message, string errorCode = null)
+        {
+            return new ReturnStatus<T>
+            {
+                IsSuccess = false,
+                Message = message,
+                ErrorCode = errorCode
             };
         }
     }

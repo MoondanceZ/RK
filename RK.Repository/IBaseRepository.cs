@@ -17,8 +17,6 @@ namespace RK.Repository
         void Delete(T entity);
         void Delete(Expression<Func<T, bool>> where);
         void DeleteAll(IEnumerable<T> entities);
-        T GetById(long Id);
-        T GetById(string Id);
         T Get(Expression<Func<T, bool>> where);
         IEnumerable<T> GetAll();
         IEnumerable<T> GetMany(Expression<Func<T, bool>> where);
