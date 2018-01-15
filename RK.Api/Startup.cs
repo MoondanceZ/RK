@@ -3,6 +3,7 @@ using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json.Serialization;
@@ -41,16 +42,15 @@ namespace RK.Api
 
                     options.ApiName = "rk";
                 });
-            services.AddMvc()                
+            services.AddMvc()
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
-                }); 
+                });
 
             //添加跨域
             services.AddCors();
-
             // Add Autofac
             #region  Add Autofac
             var builder = new ContainerBuilder();
@@ -71,7 +71,7 @@ namespace RK.Api
 
             var container = builder.Build();
 
-            IocContainer.SetContainer(container);           
+            IocContainer.SetContainer(container);
 
             return new AutofacServiceProvider(container);
             #endregion
@@ -84,7 +84,16 @@ namespace RK.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-            
+
+            app.UseCors(options =>
+                        options.AllowAnyOrigin()
+                               .AllowAnyMethod()
+                               .AllowAnyHeader()
+                               .AllowCredentials()
+                               .SetPreflightMaxAge(TimeSpan.FromSeconds(2520))
+                        );
+
+
             app.UseAuthentication();
 
             //app.UseMiddleware(typeof(TokenProviderMiddleware));
