@@ -23,5 +23,7 @@ namespace RK.Model
         /// 状态: -1,删除;1,正常;0,禁用
         /// </summary>
         public int Status { get; set; }
+
+        List<AccountRecord> AccountRecord { get; set; }
     }
 }

@@ -13,13 +13,13 @@ namespace RK.Framework.Migrations
                 name: "AccountType",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(type: "longtext", nullable: false),
-                    Name = table.Column<string>(type: "longtext", nullable: false),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    UserInfoId = table.Column<int>(type: "int", nullable: true)
+                    Code = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    Status = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    UserInfoId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,14 +30,14 @@ namespace RK.Framework.Migrations
                 name: "UserInfo",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Account = table.Column<string>(type: "varchar(20)", maxLength: 20, nullable: false),
-                    Email = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: true),
-                    Password = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: false),
-                    Phone = table.Column<string>(type: "varchar(32)", maxLength: 32, nullable: true),
-                    Sex = table.Column<int>(type: "int", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    Account = table.Column<string>(maxLength: 20, nullable: false),
+                    Email = table.Column<string>(maxLength: 32, nullable: true),
+                    Password = table.Column<string>(maxLength: 32, nullable: false),
+                    Phone = table.Column<string>(maxLength: 32, nullable: true),
+                    Sex = table.Column<int>(nullable: false),
+                    UpdatedTime = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn)
                 },
                 constraints: table =>
@@ -49,34 +49,34 @@ namespace RK.Framework.Migrations
                 name: "AccountRecord",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AccountRecordTypeId = table.Column<int>(type: "int", nullable: false),
-                    Amount = table.Column<decimal>(type: "decimal(65, 30)", nullable: false),
-                    DeletedTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    RecordTypeId = table.Column<int>(type: "int", nullable: true),
-                    Remark = table.Column<string>(type: "varchar(200)", maxLength: 200, nullable: true),
-                    Status = table.Column<int>(type: "int", nullable: false),
-                    Type = table.Column<int>(type: "int", nullable: false),
-                    UpdatedTime = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    AccountDate = table.Column<string>(nullable: true),
+                    AccountTypeId = table.Column<int>(nullable: false),
+                    Amount = table.Column<decimal>(nullable: false),
+                    DeletedTime = table.Column<DateTime>(nullable: false),
+                    Remark = table.Column<string>(maxLength: 200, nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    Type = table.Column<int>(nullable: false),
+                    UpdatedTime = table.Column<DateTime>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn),
-                    UserId = table.Column<int>(type: "int", nullable: false)
+                    UserInfoId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AccountRecord", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_AccountRecord_AccountType_RecordTypeId",
-                        column: x => x.RecordTypeId,
+                        name: "FK_AccountRecord_AccountType_AccountTypeId",
+                        column: x => x.AccountTypeId,
                         principalTable: "AccountType",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AccountRecord_RecordTypeId",
+                name: "IX_AccountRecord_AccountTypeId",
                 table: "AccountRecord",
-                column: "RecordTypeId");
+                column: "AccountTypeId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

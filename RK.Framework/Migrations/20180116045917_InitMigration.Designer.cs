@@ -11,7 +11,7 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    [Migration("20180114090339_InitMigration")]
+    [Migration("20180116045917_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -19,20 +19,20 @@ namespace RK.Framework.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
-                .HasAnnotation("ProductVersion", "2.0.0-rtm-26452");
+                .HasAnnotation("ProductVersion", "2.0.1-rtm-125");
 
             modelBuilder.Entity("RK.Model.AccountRecord", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int>("AccountRecordTypeId");
+                    b.Property<string>("AccountDate");
+
+                    b.Property<int>("AccountTypeId");
 
                     b.Property<decimal>("Amount");
 
                     b.Property<DateTime>("DeletedTime");
-
-                    b.Property<int?>("RecordTypeId");
 
                     b.Property<string>("Remark")
                         .HasMaxLength(200);
@@ -45,11 +45,11 @@ namespace RK.Framework.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasAnnotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.ComputedColumn);
 
-                    b.Property<int>("UserId");
+                    b.Property<int>("UserInfoId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RecordTypeId");
+                    b.HasIndex("AccountTypeId");
 
                     b.ToTable("AccountRecord");
                 });
@@ -108,9 +108,10 @@ namespace RK.Framework.Migrations
 
             modelBuilder.Entity("RK.Model.AccountRecord", b =>
                 {
-                    b.HasOne("RK.Model.AccountType", "RecordType")
+                    b.HasOne("RK.Model.AccountType", "AccountType")
                         .WithMany()
-                        .HasForeignKey("RecordTypeId");
+                        .HasForeignKey("AccountTypeId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }
