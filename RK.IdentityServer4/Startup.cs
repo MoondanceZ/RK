@@ -31,6 +31,8 @@ namespace RK.IdentityServer4
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddMvc();
+
             //RSA：证书长度2048以上，否则抛异常
             //配置AccessToken的加密证书
             var rsa = new RSACryptoServiceProvider();
@@ -44,6 +46,7 @@ namespace RK.IdentityServer4
                 .AddInMemoryIdentityResources(OAuth2Config.GetIdentityResources())
                 .AddInMemoryApiResources(OAuth2Config.GetApiResources())
                 .AddInMemoryClients(OAuth2Config.GetClients())
+                .AddTestUsers(OAuth2Config.TestUsers().ToList())
 
                 //如果是client credentials模式那么就不需要设置验证User了
                 .AddResourceOwnerValidator<UserInfoValidator>();
@@ -81,8 +84,11 @@ namespace RK.IdentityServer4
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseStaticFiles();
 
             app.UseIdentityServer();
+
+            app.UseMvcWithDefaultRoute();
         }
     }
 }
