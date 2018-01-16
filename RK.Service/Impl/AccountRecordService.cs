@@ -148,5 +148,20 @@ namespace RK.Service.Impl
                 return ReturnStatus<AccountResponse>.Error("更新失败");
             }
         }
+        
+        public ReturnStatus Delete(int id)
+        {
+            try
+            {
+                _repository.Delete(m => m.Id == id);
+                _unitOfWork.Commit();
+                return ReturnStatus.Success("删除成功");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, $"Delete AccountRecord Error: {ex}");
+                return ReturnStatus.Error("删除失败");
+            }
+        }
     }
 }

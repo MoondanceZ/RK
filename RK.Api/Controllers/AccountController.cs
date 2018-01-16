@@ -62,7 +62,7 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{Id}")]
+        [HttpPut("{id}")]
         public ReturnStatus<AccountResponse> Put(int id, [FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
@@ -70,6 +70,17 @@ namespace RK.Api.Controllers
                 return ReturnStatus<AccountResponse>.Error("请求参数有误");
             }
             return _accountRecordService.Update(id, request);
+        }
+
+        /// <summary>
+        /// 删除
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpDelete("{id}")]
+        public ReturnStatus Delete(int id)
+        {
+            return _accountRecordService.Delete(id);
         }
     }
 }

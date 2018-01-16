@@ -14,5 +14,6 @@ namespace RK.Service
         ReturnStatus<AccountResponse> Update(int id, AccountRequest request);
         ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId);
         ReturnStatus<AccountResponse> Get(int id);
+        ReturnStatus Delete(int id);
     }
 }
