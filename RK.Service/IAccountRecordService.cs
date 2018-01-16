@@ -11,6 +11,8 @@ namespace RK.Service
     public interface IAccountRecordService : IBaseService<AccountRecord>
     {
         ReturnStatus<AccountResponse> Create(AccountRequest request);
-        ReturnStatus<AccountResponse> Update(UpdateAccountRequest request);
+        ReturnStatus<AccountResponse> Update(int id, AccountRequest request);
+        ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId);
+        ReturnStatus<AccountResponse> Get(int id);
     }
 }

@@ -30,13 +30,25 @@ namespace RK.Api.Controllers
             return ReturnStatus<List<AccountType>>.Success(string.Empty, _accountTypeService.GetAccountRecordTypes(userId).ToList());
         }
 
+        [HttpGet("{id}")]
+        public ReturnStatus<AccountResponse> Get(int id)
+        {
+            return _accountRecordService.Get(id);
+        }
+
+        [HttpGet("List")]
+        public ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId)
+        {
+            return _accountRecordService.GetList(pageIndex, pageSize, userId);
+        }
+
         /// <summary>
         /// 新增
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public ReturnStatus<AccountResponse> Post(AccountRequest request)
+        public ReturnStatus<AccountResponse> Post([FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
             {
@@ -50,14 +62,14 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut]
-        public ReturnStatus<AccountResponse> Put(UpdateAccountRequest request)
+        [HttpPut("{Id}")]
+        public ReturnStatus<AccountResponse> Put(int id, [FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return ReturnStatus<AccountResponse>.Error("请求参数有误");
             }
-            return _accountRecordService.Update(request);
+            return _accountRecordService.Update(id, request);
         }
     }
 }

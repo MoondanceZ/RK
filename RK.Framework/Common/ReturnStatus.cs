@@ -57,21 +57,34 @@ namespace RK.Framework.Common
 
     public class ReturnPage<T> where T : class, new()
     {
-        public bool Status { get; set; }
+        public bool IsSuccess { get; set; }
         public int PageIndex { get; set; }
         public int PageSize { get; set; }
         public int TotalCount { get; set; }
-        public T Data { get; set; }
+        public IEnumerable<T> Data { get; set; }
+        public string Message { get; set; }
 
-        public static ReturnPage<T> Success(int pageIndex, int pageSize, int totalCount, T data)
+        public static ReturnPage<T> Success(int pageIndex, int pageSize, int totalCount, IEnumerable<T> data, string message = null)
         {
             return new ReturnPage<T>
             {
-                Status = true,
+                IsSuccess = true,
                 PageIndex = pageIndex,
                 PageSize = pageSize,
                 TotalCount = totalCount,
-                Data = data
+                Data = data,
+                Message = message
+            };
+        }
+
+        public static ReturnPage<T> Error(int pageIndex, int pageSize, string errorMessage)
+        {
+            return new ReturnPage<T>
+            {
+                IsSuccess = false,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Message = errorMessage
             };
         }
     }

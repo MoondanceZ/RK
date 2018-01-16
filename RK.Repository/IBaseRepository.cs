@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,6 +9,7 @@ namespace RK.Repository
 {
     public interface IBaseRepository<T> where T : class
     {
+        DbSet<T> DbSet { get; }
         void Add(T entity);
         void AddAll(IEnumerable<T> entities);
         void BulkInsert(IEnumerable<T> entities);

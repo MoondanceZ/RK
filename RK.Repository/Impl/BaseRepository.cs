@@ -29,6 +29,13 @@ namespace RK.Repository.Impl
             }
         }
 
+        public DbSet<T> DbSet
+        {
+            get
+            {
+                return dbset;
+            }
+        }
         public BaseRepository(IDatabaseFactory databaseFactory)
         {            
             DatabaseFactory = databaseFactory;

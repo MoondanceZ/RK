@@ -9,6 +9,8 @@ namespace RK.Model.Dto.Reponse
         public int Id { get; set; }
         public int UserId { get; set; }
         public int Type { get; set; }
+        public string TypeCode { get; set; }
+        public string TypeName { get; set; }
         public int AccountTypeId { get; set; }
         public decimal Amount { get; set; }
         public string Remark { get; set; }
