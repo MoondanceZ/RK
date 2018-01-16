@@ -16,9 +16,10 @@ namespace RK.Service.Impl
 {
     public class AccountRecordService : BaseService<AccountRecord, IAccountRecordRepository>, IAccountRecordService
     {
-        private static Logger Logger = LogManager.GetCurrentClassLogger();
-        public AccountRecordService(IUnitOfWork unitOfWork, IAccountRecordRepository repository) : base(unitOfWork, repository)
+        private readonly ILogger<AccountRecordService> _logger;
+        public AccountRecordService(IUnitOfWork unitOfWork, IAccountRecordRepository repository, ILogger<AccountRecordService> logger) : base(unitOfWork, repository)
         {
+            _logger = logger;
         }
 
         public ReturnStatus<AccountResponse> Create(AccountRequest request)
@@ -50,7 +51,7 @@ namespace RK.Service.Impl
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Create AccountRecord Error");
+                _logger.LogError(ex, $"Create AccountRecord Error: {ex}");
                 return ReturnStatus<AccountResponse>.Error("添加失败");
             }
         }
@@ -78,7 +79,7 @@ namespace RK.Service.Impl
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Query AccountRecord Error");
+                _logger.LogError(ex, $"Query AccountRecord Error: {ex}");
                 return ReturnStatus<AccountResponse>.Error("查询失败");
             }
         }
@@ -143,7 +144,7 @@ namespace RK.Service.Impl
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "Update AccountRecord Error");
+                _logger.LogError(ex, $"Update AccountRecord Error: {ex}");
                 return ReturnStatus<AccountResponse>.Error("更新失败");
             }
         }
