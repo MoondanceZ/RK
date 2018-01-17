@@ -7,15 +7,16 @@ using RK.Service;
 using RK.Model;
 using NLog;
 using Microsoft.AspNetCore.Authorization;
+using RK.Framework.Common;
+using RK.Model.Dto.Request;
 
 namespace RK.Api.Controllers
 {
     [Authorize]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class UserInfoController : Controller
     {
         private readonly IUserInfoService _userInfoService;
-        private static Logger Logger = LogManager.GetCurrentClassLogger();
         public UserInfoController(IUserInfoService userInfoService)
         {
             _userInfoService = userInfoService;
@@ -23,21 +24,7 @@ namespace RK.Api.Controllers
         // GET api/userInfo
         [HttpGet]
         public IEnumerable<UserInfo> Get()
-        {
-            //Logger.Info("普通信息日志-----------");
-            //Logger.Debug("调试日志-----------");
-            //Logger.Error("错误日志-----------");
-            //Logger.Fatal("异常日志-----------");
-            //Logger.Warn("警告日志-----------");
-            //Logger.Trace("跟踪日志-----------");
-            //Logger.Log(NLog.LogLevel.Warn, "Log日志------------------");
-            //throw new Exception("错误");
-            //int a = 0;
-            //var b = 100 / a;
-            //_userInfoService.AddUserInfo(new UserInfo
-            //{
-            //    Account = "12333"
-            //});
+        {           
             return _userInfoService.ListAll();
         }
 
@@ -64,6 +51,12 @@ namespace RK.Api.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
+        }
+
+        [HttpPost("Login")]
+        public ReturnStatus<UserInfo> Login([FromBody]UserLoginRequest request)
+        {
+            return _userInfoService.Login(request);
         }
     }
 }

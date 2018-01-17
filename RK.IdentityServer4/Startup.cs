@@ -31,7 +31,18 @@ namespace RK.IdentityServer4
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            #region 跨域
+            services.AddCors(options =>
+            {
+                // this defines a CORS policy called "default"
+                options.AddPolicy("default", policy =>
+                {
+                    policy.WithOrigins(Configuration["CorsApi"])
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
+            #endregion
 
             //RSA：证书长度2048以上，否则抛异常
             //配置AccessToken的加密证书
@@ -50,7 +61,8 @@ namespace RK.IdentityServer4
 
                 //如果是client credentials模式那么就不需要设置验证User了
                 .AddResourceOwnerValidator<UserInfoValidator>();
-
+            
+            services.AddMvc();
 
             #region  Add Autofac
             var builder = new ContainerBuilder();
@@ -84,6 +96,10 @@ namespace RK.IdentityServer4
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            //跨域访问
+            app.UseCors("default");
+
             app.UseStaticFiles();
 
             app.UseIdentityServer();
