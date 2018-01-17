@@ -37,7 +37,7 @@ namespace RK.Api
             services.AddAuthentication("Bearer")
                 .AddIdentityServerAuthentication(options =>
                 {
-                    options.Authority = "http://localhost:13381";
+                    options.Authority = Configuration["IdentityServer4Url"];
                     options.RequireHttpsMetadata = false;
 
                     options.ApiName = "rk";
