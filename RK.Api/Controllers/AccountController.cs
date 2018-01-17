@@ -27,7 +27,7 @@ namespace RK.Api.Controllers
         [HttpGet("Types")]
         public ReturnStatus<List<AccountType>> Types(int userId)
         {
-            return ReturnStatus<List<AccountType>>.Success(string.Empty, _accountTypeService.GetAccountRecordTypes(userId).ToList());
+            return _accountTypeService.GetAccountRecordTypes(userId);
         }
 
         [HttpGet("{id}")]

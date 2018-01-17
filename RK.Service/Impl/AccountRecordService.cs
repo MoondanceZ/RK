@@ -60,7 +60,7 @@ namespace RK.Service.Impl
         {
             try
             {
-                var record = _repository.DbSet.Include(m => m.AccountType).Where(m => m.Id == id).FirstOrDefault();
+                var record = _repository.GetAllLazy().Include(m => m.AccountType).Where(m => m.Id == id).FirstOrDefault();
                 if (record == null)
                     return ReturnStatus<AccountResponse>.Error("该记录不存在");
 
@@ -86,7 +86,7 @@ namespace RK.Service.Impl
 
         public ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId)
         {
-            var records = _repository.DbSet
+            var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
                 .Where(m => m.UserInfoId == userId)
                 .OrderByDescending(m => m.Id)

@@ -28,14 +28,7 @@ namespace RK.Repository.Impl
                 return dataContext;
             }
         }
-
-        public DbSet<T> DbSet
-        {
-            get
-            {
-                return dbset;
-            }
-        }
+        
         public BaseRepository(IDatabaseFactory databaseFactory)
         {            
             DatabaseFactory = databaseFactory;
@@ -81,9 +74,9 @@ namespace RK.Repository.Impl
             dbset.Remove(entity);
         }
 
-        public virtual void Delete(Expression<Func<T, bool>> where)
+        public virtual void Delete(Expression<Func<T, bool>> predicate)
         {
-            IEnumerable<T> objects = dbset.Where<T>(where).AsEnumerable();
+            IEnumerable<T> objects = dbset.Where<T>(predicate).AsEnumerable();
             dbset.RemoveRange(objects);
         }
 
@@ -98,19 +91,24 @@ namespace RK.Repository.Impl
             return dbset.ToList();
         }
 
-        public virtual IEnumerable<T> GetMany(Expression<Func<T, bool>> where)
+        public virtual IEnumerable<T> GetMany(Expression<Func<T, bool>> predicate)
         {
-            return dbset.Where(where).ToList();
+            return dbset.Where(predicate).ToList();
         }
 
-        public T Get(Expression<Func<T, bool>> where)
+        public T Get(Expression<Func<T, bool>> predicate)
         {
-            return dbset.Where(where).FirstOrDefault<T>();
+            return dbset.Where(predicate).FirstOrDefault<T>();
         }
 
         public virtual IQueryable<T> GetAllLazy()
         {
             return dbset.AsQueryable();
+        }
+
+        public bool IsExist(Expression<Func<T, bool>> predicate)
+        {
+            return dbset.Any(predicate);
         }
     }
 }

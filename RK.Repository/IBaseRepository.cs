@@ -9,7 +9,7 @@ namespace RK.Repository
 {
     public interface IBaseRepository<T> where T : class
     {
-        DbSet<T> DbSet { get; }
+        bool IsExist(Expression<Func<T, bool>> predicate);
         void Add(T entity);
         void AddAll(IEnumerable<T> entities);
         void BulkInsert(IEnumerable<T> entities);
@@ -17,11 +17,11 @@ namespace RK.Repository
         void Update(IEnumerable<T> entities);
         void BulkUpdate(IEnumerable<T> entities);
         void Delete(T entity);
-        void Delete(Expression<Func<T, bool>> where);
+        void Delete(Expression<Func<T, bool>> predicate);
         void DeleteAll(IEnumerable<T> entities);
-        T Get(Expression<Func<T, bool>> where);
+        T Get(Expression<Func<T, bool>> predicate);
         IEnumerable<T> GetAll();
-        IEnumerable<T> GetMany(Expression<Func<T, bool>> where);
+        IEnumerable<T> GetMany(Expression<Func<T, bool>> predicate);
         IQueryable<T> GetAllLazy();
     }
 }

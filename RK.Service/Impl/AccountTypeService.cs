@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Text;
 using RK.Model.Dto.Request;
 using RK.Framework.Common;
+using System.Linq;
 
 namespace RK.Service.Impl
 {
@@ -15,9 +16,9 @@ namespace RK.Service.Impl
         {
         }
 
-        public IEnumerable<AccountType> GetAccountRecordTypes(int userInfoId)
+        public ReturnStatus<List<AccountType>> GetAccountRecordTypes(int userInfoId)
         {
-            return _repository.GetMany(m => m.UserInfoId == 0 || m.UserInfoId == userInfoId);
+            return ReturnStatus<List<AccountType>>.Success(string.Empty, _repository.GetMany(m => m.UserInfoId == 0 || m.UserInfoId == userInfoId).ToList());
         }
     }
 }

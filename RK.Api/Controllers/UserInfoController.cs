@@ -9,6 +9,7 @@ using NLog;
 using Microsoft.AspNetCore.Authorization;
 using RK.Framework.Common;
 using RK.Model.Dto.Request;
+using RK.Model.Dto.Reponse;
 
 namespace RK.Api.Controllers
 {
@@ -35,10 +36,14 @@ namespace RK.Api.Controllers
             return "value";
         }
 
-        // POST api/userInfo
+        /// <summary>
+        /// 注册
+        /// </summary>
+        /// <param name="request"></param>
         [HttpPost]
-        public void Post([FromBody]string value)
+        public ReturnStatus<UserSignUpResponse> Post([FromBody]UserSignUpRequest request)
         {
+            return _userInfoService.Create(request);
         }
 
         // PUT api/userInfo/5
@@ -51,12 +56,6 @@ namespace RK.Api.Controllers
         [HttpDelete("{id}")]
         public void Delete(int id)
         {
-        }
-
-        [HttpPost("Login")]
-        public ReturnStatus<UserInfo> Login([FromBody]UserLoginRequest request)
-        {
-            return _userInfoService.Login(request);
         }
     }
 }
