@@ -10,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Configuration;
 using System.Security.Cryptography;
 using RK.IdentityServer4.OAuth2;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using Autofac;
 using RK.Framework.Database.Impl;
 using System.Reflection;

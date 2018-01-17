@@ -4,10 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using RK.Service;
-using RK.Model;
-using NLog;
 using Microsoft.AspNetCore.Authorization;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
 
@@ -22,18 +20,12 @@ namespace RK.Api.Controllers
         {
             _userInfoService = userInfoService;
         }
-        // GET api/userInfo
-        [HttpGet]
-        public IEnumerable<UserInfo> Get()
-        {           
-            return _userInfoService.ListAll();
-        }
 
         // GET api/userInfo/5
         [HttpGet("{id}")]
-        public string Get(int id)
+        public ReturnStatus<UserInfoResponse> Get(int id)
         {
-            return "value";
+            return _userInfoService.Get(id);
         }
 
         /// <summary>
@@ -43,13 +35,26 @@ namespace RK.Api.Controllers
         [HttpPost]
         public ReturnStatus<UserSignUpResponse> Post([FromBody]UserSignUpRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return ReturnStatus<UserSignUpResponse>.Error("请求参数有误");
+            }
             return _userInfoService.Create(request);
         }
 
-        // PUT api/userInfo/5
+        /// <summary>
+        /// 更新
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="request"></param>
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
+        public ReturnStatus Put(int id, [FromBody]UpdateUserRequest request)
         {
+            if (!ModelState.IsValid)
+            {
+                return ReturnStatus.Error("请求参数有误");
+            }
+            return _userInfoService.Update(request);
         }
 
         // DELETE api/userInfo/5

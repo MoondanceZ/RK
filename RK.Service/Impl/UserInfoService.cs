@@ -5,7 +5,7 @@ using System.Text;
 using RK.Repository;
 using RK.Framework.Database;
 using System.Linq;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
 
@@ -17,15 +17,49 @@ namespace RK.Service.Impl
         {
         }
 
-        public bool Auth(string account, string password)
+        public bool AuthUser(string account, string password)
         {
-            var user = _repository.Get(m=>m.Account==account);
-            return true;
+            var user = _repository.Get(m => m.Account == account);
+            if (user != null && user.Password == EncryptHelper.AESDecrypt(password))
+                return true;
+            return false;
         }
 
         public ReturnStatus<UserSignUpResponse> Create(UserSignUpRequest request)
         {
-            throw new NotImplementedException();
+            var isExist = _repository.IsExist(m => m.Account == request.Account);
+            if (isExist)
+                return ReturnStatus<UserSignUpResponse>.Error("该帐号已存在");
+            var user = new UserInfo
+            {
+                Account = request.Account,
+                Password = EncryptHelper.AESEncrypt(request.Password)
+            };
+            _repository.Add(user);
+            _unitOfWork.Commit();
+            return ReturnStatus<UserSignUpResponse>.Success("注册成功", new UserSignUpResponse
+            {
+                Id = user.Id,
+                Account = user.Account
+            });
+        }
+
+        public ReturnStatus<UserInfoResponse> Get(int id)
+        {
+            var user = _repository.Get(m => m.Id == id);
+            if (user != null)
+                return ReturnStatus<UserInfoResponse>.Success(null, new UserInfoResponse
+                {
+                    Id = user.Id,
+                    Account = user.Account,
+                    AvatarUrl = user.AvatarUrl,
+                    Email = user.Email,
+                    Name = user.Name,
+                    Phone = user.Phone,
+                    Sex = user.Sex
+                });
+            else
+                return ReturnStatus<UserInfoResponse>.Error("该帐号不存在");
         }
 
         public UserInfo GetUserByAccount(string account)
@@ -33,10 +67,23 @@ namespace RK.Service.Impl
             return _repository.Get(m => m.Account == account);
         }
 
-        public List<UserInfo> ListAll()
+        public ReturnStatus Update(UpdateUserRequest request)
         {
-            var list = _repository.GetAll();
-            return list.ToList();
-        }        
+            var user = _repository.Get(m => m.Id == request.Id);
+            if (user != null)
+            {
+                user.AvatarUrl = request.AvatarUrl;
+                user.Email = request.Email;
+                user.Password = EncryptHelper.AESEncrypt(request.Password);
+                user.Phone = request.Phone;
+                user.Name = request.Name;
+                user.Sex = request.Sex;
+                _repository.Update(user);
+                _unitOfWork.Commit();
+                return ReturnStatus.Success("更新成功");
+            }
+            else
+                return ReturnStatus.Error("该帐号不存在");
+        }
     }
 }

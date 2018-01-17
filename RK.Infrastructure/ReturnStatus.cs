@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace RK.Framework.Common
+namespace RK.Infrastructure
 {
     public class ReturnStatus
     {

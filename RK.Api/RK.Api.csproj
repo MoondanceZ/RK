@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\RK.Framework\RK.Framework.csproj" />
+    <ProjectReference Include="..\RK.Infrastructure\RK.Infrastructure.csproj" />
     <ProjectReference Include="..\RK.Model\RK.Model.csproj" />
     <ProjectReference Include="..\RK.Repository\RK.Repository.csproj" />
     <ProjectReference Include="..\RK.Service\RK.Service.csproj" />

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RK.Model.Dto.Request;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using System.Linq;
 
 namespace RK.Service.Impl

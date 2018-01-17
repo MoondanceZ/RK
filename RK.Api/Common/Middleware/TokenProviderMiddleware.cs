@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using RK.Service;
 using System;
 using System.Collections.Generic;
@@ -120,7 +120,7 @@ namespace RK.Api.Common.Middleware
         /// <returns></returns>
         private Task<ClaimsIdentity> GetIdentity(string username, string password)
         {
-            var isValidated = _userInfoService.Auth(username, password);
+            var isValidated = _userInfoService.AuthUser(username, password);
 
             if (isValidated)
             {

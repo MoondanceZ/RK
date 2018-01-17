@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;

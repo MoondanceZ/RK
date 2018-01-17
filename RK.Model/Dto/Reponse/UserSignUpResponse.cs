@@ -6,5 +6,7 @@ namespace RK.Model.Dto.Reponse
 {
     public class UserSignUpResponse
     {
+        public int Id { get; set; }
+        public string Account { get; set; }
     }
 }

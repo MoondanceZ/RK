@@ -10,7 +10,7 @@ using Newtonsoft.Json.Serialization;
 using NLog.Extensions.Logging;
 using NLog.Web;
 using RK.Api.Common.Middleware;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using RK.Framework.Database;
 using RK.Framework.Database.Impl;
 using System;

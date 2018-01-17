@@ -10,6 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\RK.Infrastructure\RK.Infrastructure.csproj" />
     <ProjectReference Include="..\RK.Repository\RK.Repository.csproj" />
   </ItemGroup>
 

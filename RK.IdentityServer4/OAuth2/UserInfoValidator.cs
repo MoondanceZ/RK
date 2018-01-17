@@ -1,5 +1,6 @@
 ﻿using IdentityServer4.Models;
 using IdentityServer4.Validation;
+using RK.Infrastructure;
 using RK.Service;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace RK.IdentityServer4.OAuth2
                     if (userInfo != null)
                     {
                         //check if password match - remember to hash password if stored as hash in db
-                        if (userInfo.Password == context.Password)
+                        if (userInfo.Password == EncryptHelper.AESDecrypt(context.Password))
                         {
                             //set the result
                             context.Result = new GrantValidationResult(subject: context.UserName, authenticationMethod: "Resource Owner Password");

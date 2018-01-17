@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RK.Framework.Database;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using Microsoft.Extensions.Logging;
 using NLog;
 using RK.Model.Dto.Reponse;
@@ -114,7 +114,7 @@ namespace RK.Service.Impl
             return ReturnPage<AccountResponse>.Error(pageIndex, pageSize, "没有更多的记录");
         }
 
-        public ReturnStatus<AccountResponse> Update(int Id, AccountRequest request)
+        public ReturnStatus Update(int Id, AccountRequest request)
         {
             try
             {
@@ -131,21 +131,12 @@ namespace RK.Service.Impl
                 _repository.Update(record);
                 _unitOfWork.Commit();
 
-                return ReturnStatus<AccountResponse>.Success("更新成功", new AccountResponse
-                {
-                    Id = record.Id,
-                    AccountDate = record.AccountDate,
-                    AccountTypeId = record.AccountTypeId,
-                    Amount = record.Amount,
-                    Remark = record.Remark,
-                    Type = record.Type,
-                    UserId = record.UserInfoId
-                });
+                return ReturnStatus<AccountResponse>.Success("更新成功");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Update AccountRecord Error: {ex}");
-                return ReturnStatus<AccountResponse>.Error("更新失败");
+                return ReturnStatus.Error("更新失败");
             }
         }
         

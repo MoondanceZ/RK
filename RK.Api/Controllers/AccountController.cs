@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using RK.Service;
 using RK.Model;
 using Microsoft.AspNetCore.Authorization;
-using RK.Framework.Common;
+using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
 
@@ -63,11 +63,11 @@ namespace RK.Api.Controllers
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public ReturnStatus<AccountResponse> Put(int id, [FromBody]AccountRequest request)
+        public ReturnStatus Put(int id, [FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return ReturnStatus<AccountResponse>.Error("请求参数有误");
+                return ReturnStatus.Error("请求参数有误");
             }
             return _accountRecordService.Update(id, request);
         }
