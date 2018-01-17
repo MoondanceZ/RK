@@ -11,12 +11,12 @@ namespace RK.Model
         [Required]
         [StringLength(20)]
         public string Account { get; set; }
-        [Required]
         [StringLength(20)]
         public string Name { get; set; }
         [Required]
         [StringLength(32)]
         public string Password { get; set; }
+        [StringLength(300)]
         public string AvatarUrl { get; set; }
         [StringLength(128)]
         public string Email { get; set; }
