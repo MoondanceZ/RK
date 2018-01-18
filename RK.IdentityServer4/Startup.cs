@@ -44,6 +44,7 @@ namespace RK.IdentityServer4
             });
             #endregion
 
+            services.AddMvc();
             //RSA：证书长度2048以上，否则抛异常
             //配置AccessToken的加密证书
             var rsa = new RSACryptoServiceProvider();
@@ -61,8 +62,6 @@ namespace RK.IdentityServer4
 
                 //如果是client credentials模式那么就不需要设置验证User了
                 .AddResourceOwnerValidator<UserInfoValidator>();
-            
-            services.AddMvc();
 
             #region  Add Autofac
             var builder = new ContainerBuilder();
