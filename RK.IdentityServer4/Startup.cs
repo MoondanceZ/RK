@@ -58,8 +58,6 @@ namespace RK.IdentityServer4
                 .AddInMemoryIdentityResources(OAuth2Config.GetIdentityResources())
                 .AddInMemoryApiResources(OAuth2Config.GetApiResources())
                 .AddInMemoryClients(OAuth2Config.GetClients())
-                .AddTestUsers(OAuth2Config.TestUsers().ToList())
-
                 //如果是client credentials模式那么就不需要设置验证User了
                 .AddResourceOwnerValidator<UserInfoValidator>();
 
