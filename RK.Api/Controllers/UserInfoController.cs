@@ -33,6 +33,7 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         [HttpPost]
+        [AllowAnonymous]
         public ReturnStatus<UserSignUpResponse> Post([FromBody]UserSignUpRequest request)
         {
             if (!ModelState.IsValid)
