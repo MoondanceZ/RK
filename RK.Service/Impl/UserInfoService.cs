@@ -44,9 +44,9 @@ namespace RK.Service.Impl
             });
         }
 
-        public ReturnStatus<UserInfoResponse> Get(int id)
+        public ReturnStatus<UserInfoResponse> Get(string account)
         {
-            var user = _repository.Get(m => m.Id == id);
+            var user = _repository.Get(m => m.Account == account);
             if (user != null)
                 return ReturnStatus<UserInfoResponse>.Success(null, new UserInfoResponse
                 {

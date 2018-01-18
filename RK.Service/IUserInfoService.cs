@@ -13,7 +13,7 @@ namespace RK.Service
         bool AuthUser(string username, string password);
         UserInfo GetUserByAccount(string account);
         ReturnStatus<UserSignUpResponse> Create(UserSignUpRequest request);
-        ReturnStatus<UserInfoResponse> Get(int id);
+        ReturnStatus<UserInfoResponse> Get(string account);
         ReturnStatus Update(UpdateUserRequest request);
     }
 }

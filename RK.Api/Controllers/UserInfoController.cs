@@ -22,10 +22,10 @@ namespace RK.Api.Controllers
         }
 
         // GET api/userInfo/5
-        [HttpGet("{id}")]
-        public ReturnStatus<UserInfoResponse> Get(int id)
+        [HttpGet("{account}")]
+        public ReturnStatus<UserInfoResponse> Get(string account)
         {
-            return _userInfoService.Get(id);
+            return _userInfoService.Get(account);
         }
 
         /// <summary>
