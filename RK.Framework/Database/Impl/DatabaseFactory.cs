@@ -16,7 +16,6 @@ namespace RK.Framework.Database.Impl
         {
             get
             {
-                _logger.LogInformation("Test DbContext: " + hashCode.ToString());
                 return _dbContext;
             }
         }
