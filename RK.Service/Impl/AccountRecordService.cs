@@ -43,7 +43,7 @@ namespace RK.Service.Impl
                     Id = record.Id,
                     AccountDate = record.AccountDate,
                     AccountTypeId = record.AccountTypeId,
-                    Amount = record.Amount,
+                    Amount = record.Amount.ToString("F2"),
                     Remark = record.Remark,
                     Type = record.Type,
                     UserId = record.UserInfoId
@@ -69,7 +69,7 @@ namespace RK.Service.Impl
                     Id = record.Id,
                     AccountDate = record.AccountDate,
                     AccountTypeId = record.AccountTypeId,
-                    Amount = record.Amount,
+                    Amount = record.Amount.ToString("F2"),
                     Remark = record.Remark,
                     Type = record.Type,
                     TypeCode = record.AccountType.Code,
@@ -101,7 +101,7 @@ namespace RK.Service.Impl
                     {
                         AccountDate = m.AccountDate,
                         AccountTypeId = m.AccountTypeId,
-                        Amount = m.Amount,
+                        Amount = m.Amount.ToString("F2"),
                         Id = m.Id,
                         Remark = m.Remark,
                         Type = m.Type,

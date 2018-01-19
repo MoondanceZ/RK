@@ -11,8 +11,8 @@ namespace RK.Model.Dto.Reponse
         public int Type { get; set; }
         public string TypeCode { get; set; }
         public string TypeName { get; set; }
-        public int AccountTypeId { get; set; }
-        public decimal Amount { get; set; }
+        public int AccountTypeId { get; set; }        
+        public string Amount { get; set; }
         public string Remark { get; set; }
         public string AccountDate { get; set; }
     }
