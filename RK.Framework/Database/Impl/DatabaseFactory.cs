@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using RK.Infrastructure;
 using System.IO;
 
@@ -8,15 +9,21 @@ namespace RK.Framework.Database.Impl
 {
     public class DatabaseFactory : IDatabaseFactory, IDesignTimeDbContextFactory<RkDbContext>
     {
-        private static readonly RkDbContext _dbContext = new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
-        
+        private readonly RkDbContext _dbContext; // = new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
+
+        private readonly ILogger<DatabaseFactory> _logger;
         public RkDbContext DataContext
         {
             get
             {
-                var hashCode = _dbContext.GetHashCode();
+                _logger.LogInformation("Test DbContext: " + hashCode.ToString());
                 return _dbContext;
             }
+        }
+        public DatabaseFactory(ILogger<DatabaseFactory> logger, RkDbContext dbContext)
+        {
+            _logger = logger;
+            _dbContext = dbContext;
         }
 
         public RkDbContext CreateDbContext(string[] args)
