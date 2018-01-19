@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
+using RK.Infrastructure;
 using System.IO;
 
 namespace RK.Framework.Database.Impl
@@ -23,13 +24,8 @@ namespace RK.Framework.Database.Impl
 
         public RkDbContext CreateDbContext(string[] args)
         {
-            var configuration = new ConfigurationBuilder()
-                    .AddInMemoryCollection()    //将配置文件的数据加载到内存中
-                    .SetBasePath(Directory.GetCurrentDirectory())   //指定配置文件所在的目录
-                    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)  //指定加载的配置文件
-                    .Build();    //编译成对象  
             var builder = new DbContextOptionsBuilder<RkDbContext>();
-            var connStr = configuration.GetConnectionString("ConnStr");
+            var connStr = ConfigHelper.GetConnectionString("ConnStr");
             builder.UseMySql(connStr);
 
             //Ensure database creation

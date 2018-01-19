@@ -84,18 +84,18 @@ namespace RK.Service.Impl
             }
         }
 
-        public ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId)
+        public ReturnPage<AccountResponse> GetList(AccountPageListRequest request)
         {
             var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
-                .Where(m => m.UserInfoId == userId)
+                .Where(m => m.UserInfoId == request.UserId)
                 .OrderByDescending(m => m.Id)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize).ToList();
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize).ToList();
 
             if (records != null && records.Any())
             {
-                return ReturnPage<AccountResponse>.Success(pageIndex, pageSize, 0, records.Select(m =>
+                return ReturnPage<AccountResponse>.Success(request.PageIndex, request.PageSize, 0, records.Select(m =>
                 {
                     return new AccountResponse
                     {
@@ -111,7 +111,7 @@ namespace RK.Service.Impl
                     };
                 }).ToList());
             }
-            return ReturnPage<AccountResponse>.Error(pageIndex, pageSize, "没有更多的记录");
+            return ReturnPage<AccountResponse>.Error(request.PageIndex, request.PageSize, "没有更多的记录");
         }
 
         public ReturnStatus Update(int Id, AccountRequest request)
@@ -131,7 +131,7 @@ namespace RK.Service.Impl
                 _repository.Update(record);
                 _unitOfWork.Commit();
 
-                return ReturnStatus<AccountResponse>.Success("更新成功");
+                return ReturnStatus.Success("更新成功");
             }
             catch (Exception ex)
             {
@@ -139,7 +139,7 @@ namespace RK.Service.Impl
                 return ReturnStatus.Error("更新失败");
             }
         }
-        
+
         public ReturnStatus Delete(int id)
         {
             try

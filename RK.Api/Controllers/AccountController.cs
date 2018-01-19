@@ -37,9 +37,13 @@ namespace RK.Api.Controllers
         }
 
         [HttpGet("List")]
-        public ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId)
+        public ReturnPage<AccountResponse> GetList(AccountPageListRequest request)
         {
-            return _accountRecordService.GetList(pageIndex, pageSize, userId);
+            if (!ModelState.IsValid)
+            {
+                return ReturnPage<AccountResponse>.Error(request.PageIndex, request.PageSize, "请求参数有误");
+            }
+            return _accountRecordService.GetList(request);
         }
 
         /// <summary>

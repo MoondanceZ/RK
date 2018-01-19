@@ -12,7 +12,7 @@ namespace RK.Service
     {
         ReturnStatus<AccountResponse> Create(AccountRequest request);
         ReturnStatus Update(int id, AccountRequest request);
-        ReturnPage<AccountResponse> GetList(int pageIndex, int pageSize, int userId);
+        ReturnPage<AccountResponse> GetList(AccountPageListRequest request);
         ReturnStatus<AccountResponse> Get(int id);
         ReturnStatus Delete(int id);
     }
