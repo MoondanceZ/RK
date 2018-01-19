@@ -10,8 +10,7 @@ namespace RK.Framework.Database.Impl
     public class DatabaseFactory : IDatabaseFactory, IDesignTimeDbContextFactory<RkDbContext>
     {
         private readonly RkDbContext _dbContext; // = new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
-
-        private readonly ILogger<DatabaseFactory> _logger;
+        
         public RkDbContext DataContext
         {
             get
@@ -19,9 +18,8 @@ namespace RK.Framework.Database.Impl
                 return _dbContext;
             }
         }
-        public DatabaseFactory(ILogger<DatabaseFactory> logger, RkDbContext dbContext)
+        public DatabaseFactory(RkDbContext dbContext)
         {
-            _logger = logger;
             _dbContext = dbContext;
         }
 
