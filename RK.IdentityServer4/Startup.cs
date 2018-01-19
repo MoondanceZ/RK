@@ -16,6 +16,7 @@ using RK.Framework.Database.Impl;
 using System.Reflection;
 using RK.Framework.Database;
 using Autofac.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
 
 namespace RK.IdentityServer4
 {
@@ -45,6 +46,12 @@ namespace RK.IdentityServer4
             #endregion
 
             services.AddMvc();
+
+            services.AddDbContext<RkDbContext>(options =>
+            {
+                options.UseMySql(ConfigHelper.GetConnectionString("ConnStr"));
+            });
+
             //RSA：证书长度2048以上，否则抛异常
             //配置AccessToken的加密证书
             var rsa = new RSACryptoServiceProvider();
