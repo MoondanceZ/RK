@@ -84,7 +84,7 @@ namespace RK.Service.Impl
             }
         }
 
-        public ReturnPage<AccountResponse> GetList(AccountPageListRequest request)
+        public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
             var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
@@ -95,23 +95,33 @@ namespace RK.Service.Impl
 
             if (records != null && records.Any())
             {
-                return ReturnPage<AccountResponse>.Success(request.PageIndex, request.PageSize, 0, records.Select(m =>
+                var groupData = records.GroupBy(m => m.AccountDate);
+                List<DateAccountResponse> listAccountResponseDate = new List<DateAccountResponse>();
+                foreach (var item in groupData)
                 {
-                    return new AccountResponse
+                    listAccountResponseDate.Add(new DateAccountResponse
                     {
-                        AccountDate = m.AccountDate,
-                        AccountTypeId = m.AccountTypeId,
-                        Amount = m.Amount.ToString("F2"),
-                        Id = m.Id,
-                        Remark = m.Remark,
-                        Type = m.Type,
-                        TypeCode = m.AccountType.Code,
-                        TypeName = m.AccountType.Name,
-                        UserId = m.UserInfoId
-                    };
-                }).ToList());
+                        Date = item.Key,
+                        AccountRecords = item.Select(m =>
+                        {
+                            return new AccountResponse
+                            {
+                                AccountDate = m.AccountDate,
+                                AccountTypeId = m.AccountTypeId,
+                                Amount = m.Amount.ToString("F2"),
+                                Id = m.Id,
+                                Remark = m.Remark,
+                                Type = m.Type,
+                                TypeCode = m.AccountType.Code,
+                                TypeName = m.AccountType.Name,
+                                UserId = m.UserInfoId
+                            };
+                        }).ToList()
+                    });
+                }
+                return ReturnPage<DateAccountResponse>.Success(request.PageIndex, request.PageSize, 0, listAccountResponseDate);
             }
-            return ReturnPage<AccountResponse>.Error(request.PageIndex, request.PageSize, "没有更多的记录");
+            return ReturnPage<DateAccountResponse>.Error(request.PageIndex, request.PageSize, "没有更多的记录啦");
         }
 
         public ReturnStatus Update(int Id, AccountRequest request)
