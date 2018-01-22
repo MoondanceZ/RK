@@ -56,8 +56,10 @@ namespace RK.Infrastructure
 
         public static string Serialize(object instance, string dateTImeFormat)
         {
-            IsoDateTimeConverter timeFormat = new IsoDateTimeConverter();
-            timeFormat.DateTimeFormat = String.IsNullOrWhiteSpace(dateTImeFormat) ? "yyyy-MM-dd HH:mm:ss" : dateTImeFormat;
+            IsoDateTimeConverter timeFormat = new IsoDateTimeConverter
+            {
+                DateTimeFormat = String.IsNullOrWhiteSpace(dateTImeFormat) ? "yyyy-MM-dd HH:mm:ss" : dateTImeFormat
+            };
             return JsonConvert.SerializeObject(instance, Formatting.Indented, timeFormat);
         }
 
