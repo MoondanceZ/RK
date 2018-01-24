@@ -12,7 +12,7 @@ using RK.Model.Dto.Reponse;
 
 namespace RK.Api.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("[controller]")]
     public class AccountController : Controller
     {
@@ -25,7 +25,7 @@ namespace RK.Api.Controllers
             _accountRecordService = accountRecordService;
         }
 
-        [HttpGet("Types")]
+        [HttpGet("Types/{userId}")]
         public ReturnStatus<List<AccountType>> Types(int userId)
         {
             return _accountTypeService.GetAccountRecordTypes(userId);
