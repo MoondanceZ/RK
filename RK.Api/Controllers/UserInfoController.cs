@@ -34,11 +34,11 @@ namespace RK.Api.Controllers
         /// <param name="request"></param>
         [HttpPost]
         [AllowAnonymous]
-        public ReturnStatus<UserSignUpResponse> Post([FromBody]UserSignUpRequest request)
+        public ReturnStatus<UserInfoResponse> Post([FromBody]UserSignUpRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return ReturnStatus<UserSignUpResponse>.Error("请求参数有误");
+                return ReturnStatus<UserInfoResponse>.Error("请求参数有误");
             }
             return _userInfoService.Create(request);
         }

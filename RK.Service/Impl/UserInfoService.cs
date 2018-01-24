@@ -25,11 +25,11 @@ namespace RK.Service.Impl
             return false;
         }
 
-        public ReturnStatus<UserSignUpResponse> Create(UserSignUpRequest request)
+        public ReturnStatus<UserInfoResponse> Create(UserSignUpRequest request)
         {
             var isExist = _repository.IsExist(m => m.Account == request.Account);
             if (isExist)
-                return ReturnStatus<UserSignUpResponse>.Error("该帐号已存在");
+                return ReturnStatus<UserInfoResponse>.Error("该帐号已存在");
             var user = new UserInfo
             {
                 Account = request.Account,
@@ -37,7 +37,7 @@ namespace RK.Service.Impl
             };
             _repository.Add(user);
             _unitOfWork.Commit();
-            return ReturnStatus<UserSignUpResponse>.Success("注册成功", new UserSignUpResponse
+            return ReturnStatus<UserInfoResponse>.Success("注册成功", new UserInfoResponse
             {
                 Id = user.Id,
                 Account = user.Account
