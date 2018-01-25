@@ -124,7 +124,7 @@ namespace RK.Service.Impl
                 }
                 return ReturnPage<DateAccountResponse>.Success(request.PageIndex, request.PageSize, 0, listAccountResponseDate);
             }
-            return ReturnPage<DateAccountResponse>.Error(request.PageIndex, request.PageSize, "没有更多的记录啦");
+            return ReturnPage<DateAccountResponse>.Success(request.PageIndex, request.PageSize, 0, new List<DateAccountResponse>(), "没有更多的记录啦");
         }
 
         public ReturnStatus Update(int Id, AccountRequest request)
