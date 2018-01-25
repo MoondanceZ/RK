@@ -104,7 +104,7 @@ namespace RK.Service.Impl
                     listAccountResponseDate.Add(new DateAccountResponse
                     {
                         Date = item.Key,
-                        DateAmount = dateRecords.Where(m => m.AccountDate == item.Key).Sum(m => m.Amount),
+                        DateAmount = dateRecords.Where(m => m.AccountDate == item.Key && m.Type == 1).Sum(m => m.Amount),
                         AccountRecords = item.Select(m =>
                         {
                             return new AccountResponse
