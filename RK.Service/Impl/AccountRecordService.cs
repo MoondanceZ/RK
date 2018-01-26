@@ -89,7 +89,7 @@ namespace RK.Service.Impl
             var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
                 .Where(m => m.UserInfoId == request.UserId)
-                .OrderByDescending(m => m.Id)
+                .OrderByDescending(m => m.AccountDate).ThenByDescending(m => m.Id)
                 .Skip((request.PageIndex - 1) * request.PageSize)
                 .Take(request.PageSize).ToList();
 
