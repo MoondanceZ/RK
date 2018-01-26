@@ -27,11 +27,13 @@ namespace RK.Model
         /// 金额
         /// </summary>
         [Required]
+        [Column(TypeName = "decimal(18, 2)")]
         public decimal Amount { get; set; }
         /// <summary>
         /// 备注
         /// </summary>
         [MaxLength(200)]
+        [StringLength(200)]
         public string Remark { get; set; }
         /// <summary>
         /// 状态: -1,删除;1,正常;0,禁用
@@ -40,7 +42,8 @@ namespace RK.Model
         /// <summary>
         /// 记录账单时间
         /// </summary>
-        public string AccountDate { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime AccountDate { get; set; }
         /// <summary>
         /// 更新时间
         /// </summary>

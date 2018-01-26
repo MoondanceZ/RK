@@ -49,10 +49,10 @@ namespace RK.Api
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
                     options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
                 });
-            services.AddDbContext<RkDbContext>(options =>
-            {
-                options.UseMySql(ConfigHelper.GetConnectionString("ConnStr"));
-            });
+            //services.AddDbContext<RkDbContext>(options =>
+            //{
+            //    options.UseMySql(ConfigHelper.GetConnectionString("ConnStr"));
+            //});
             //添加跨域
             services.AddCors();
             // Add Autofac

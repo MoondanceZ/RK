@@ -25,11 +25,13 @@ namespace RK.Framework.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AccountDate");
+                    b.Property<DateTime>("AccountDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("AccountTypeId");
 
-                    b.Property<decimal>("Amount");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("DeletedTime");
 

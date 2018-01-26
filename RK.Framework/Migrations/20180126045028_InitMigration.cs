@@ -33,7 +33,9 @@ namespace RK.Framework.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Account = table.Column<string>(maxLength: 20, nullable: false),
-                    Email = table.Column<string>(maxLength: 32, nullable: true),
+                    AvatarUrl = table.Column<string>(maxLength: 300, nullable: true),
+                    Email = table.Column<string>(maxLength: 128, nullable: true),
+                    Name = table.Column<string>(maxLength: 20, nullable: true),
                     Password = table.Column<string>(maxLength: 32, nullable: false),
                     Phone = table.Column<string>(maxLength: 32, nullable: true),
                     Sex = table.Column<int>(nullable: false),
@@ -51,9 +53,9 @@ namespace RK.Framework.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AccountDate = table.Column<string>(nullable: true),
+                    AccountDate = table.Column<DateTime>(type: "date", nullable: false),
                     AccountTypeId = table.Column<int>(nullable: false),
-                    Amount = table.Column<decimal>(nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18, 2)", nullable: false),
                     DeletedTime = table.Column<DateTime>(nullable: false),
                     Remark = table.Column<string>(maxLength: 200, nullable: true),
                     Status = table.Column<int>(nullable: false),

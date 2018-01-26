@@ -11,6 +11,6 @@ namespace RK.Model.Dto.Request
         public int AccountTypeId { get; set; }
         public decimal Amount { get; set; }
         public string Remark { get; set; }
-        public string AccountDate { get; set; }
+        public DateTime AccountDate { get; set; }
     }
 }

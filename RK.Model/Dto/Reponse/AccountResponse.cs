@@ -14,6 +14,6 @@ namespace RK.Model.Dto.Reponse
         public int AccountTypeId { get; set; }        
         public string Amount { get; set; }
         public string Remark { get; set; }
-        public string AccountDate { get; set; }
+        public DateTime AccountDate { get; set; }
     }
 }

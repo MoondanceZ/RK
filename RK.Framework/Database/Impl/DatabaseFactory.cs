@@ -10,7 +10,11 @@ namespace RK.Framework.Database.Impl
     public class DatabaseFactory : IDatabaseFactory, IDesignTimeDbContextFactory<RkDbContext>
     {
         private readonly RkDbContext _dbContext; // = new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
-        
+
+        public DatabaseFactory()
+        {
+            _dbContext = _dbContext ?? CreateDbContext(null);
+        }
         public RkDbContext DataContext
         {
             get
@@ -33,7 +37,7 @@ namespace RK.Framework.Database.Impl
             //var dataContext = new RkDbContext(builder.Options);
             ////dataContext.Database.EnsureCreated();  //删除这句  因为执行 Update-Database 报错
             //return dataContext;
-            return _dbContext;
+            return new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
         }
     }
 }

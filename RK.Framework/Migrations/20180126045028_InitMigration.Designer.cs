@@ -11,7 +11,7 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    [Migration("20180116045917_InitMigration")]
+    [Migration("20180126045028_InitMigration")]
     partial class InitMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -26,11 +26,13 @@ namespace RK.Framework.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("AccountDate");
+                    b.Property<DateTime>("AccountDate")
+                        .HasColumnType("date");
 
                     b.Property<int>("AccountTypeId");
 
-                    b.Property<decimal>("Amount");
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18, 2)");
 
                     b.Property<DateTime>("DeletedTime");
 
@@ -85,8 +87,14 @@ namespace RK.Framework.Migrations
                         .IsRequired()
                         .HasMaxLength(20);
 
+                    b.Property<string>("AvatarUrl")
+                        .HasMaxLength(300);
+
                     b.Property<string>("Email")
-                        .HasMaxLength(32);
+                        .HasMaxLength(128);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Password")
                         .IsRequired()
