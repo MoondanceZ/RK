@@ -47,7 +47,7 @@ namespace RK.Api
                 .AddJsonOptions(options =>
                 {
                     options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd HH:mm:ss";
+                    options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
                 });
             //services.AddDbContext<RkDbContext>(options =>
             //{
