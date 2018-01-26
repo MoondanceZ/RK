@@ -12,7 +12,7 @@ using RK.Model.Dto.Reponse;
 
 namespace RK.Api.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("[controller]")]
     public class AccountController : Controller
     {

@@ -96,15 +96,21 @@ namespace RK.Service.Impl
             if (records != null && records.Any())
             {
                 var groupData = records.GroupBy(m => m.AccountDate);
-                var dateList = groupData.Select(m => m.Key).ToList();
+                var dateList = groupData.Select(m => m.Key).ToList();                
                 var dateRecords = _repository.GetMany(m => dateList.Contains(m.AccountDate));
                 List<DateAccountResponse> listAccountResponseDate = new List<DateAccountResponse>();
                 foreach (var item in groupData)
-                {
+                {                    
+                    var monthRecords = _repository.GetMany(m => Convert.ToDateTime(m.AccountDate) >= Convert.ToDateTime(item.Key).AddDays(1 - Convert.ToDateTime(item.Key).Day).Date).Select(m=>new {
+                        m.Type,
+                        m.Amount
+                    });
                     listAccountResponseDate.Add(new DateAccountResponse
                     {
                         Date = item.Key,
                         DateAmount = dateRecords.Where(m => m.AccountDate == item.Key && m.Type == 1).Sum(m => m.Amount).ToString("F2"),
+                        MonthExpend = monthRecords.Where(m => m.Type == 1).Sum(m => m.Amount).ToString("F2"),
+                        MonthIncome = monthRecords.Where(m => m.Type == 0).Sum(m => m.Amount).ToString("F2"),
                         AccountRecords = item.Select(m =>
                         {
                             return new AccountResponse
