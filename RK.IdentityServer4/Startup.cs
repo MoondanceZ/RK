@@ -38,7 +38,7 @@ namespace RK.IdentityServer4
                 // this defines a CORS policy called "default"
                 options.AddPolicy("default", policy =>
                 {
-                    policy.WithOrigins(Configuration["CorsApi"])
+                    policy.WithOrigins(Configuration["CorsApi"].Split(',',StringSplitOptions.RemoveEmptyEntries))
                         .AllowAnyHeader()
                         .AllowAnyMethod();
                 });
