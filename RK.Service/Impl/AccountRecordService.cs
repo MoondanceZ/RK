@@ -134,11 +134,11 @@ namespace RK.Service.Impl
             return ReturnPage<DateAccountResponse>.Success(request.PageIndex, request.PageSize, 0, new List<DateAccountResponse>(), "没有更多的记录啦");
         }
 
-        public ReturnStatus Update(int Id, AccountRequest request)
+        public ReturnStatus Update(int id, AccountRequest request)
         {
             try
             {
-                var record = _repository.Get(m => m.Id == Id);
+                var record = _repository.Get(m => m.Id == id);
                 if (record == null)
                     return ReturnStatus<AccountResponse>.Error("更新失败，记录不存在");
                 record.AccountDate = request.AccountDate;
@@ -164,7 +164,11 @@ namespace RK.Service.Impl
         {
             try
             {
-                _repository.Delete(m => m.Id == id);
+                var record = _repository.Get(m => m.Id == id);
+                if (record == null)
+                    return ReturnStatus<AccountResponse>.Error("删除失败，记录不存在");
+                record.Status = -1;
+                _repository.Update(record);
                 _unitOfWork.Commit();
                 return ReturnStatus.Success("删除成功");
             }
