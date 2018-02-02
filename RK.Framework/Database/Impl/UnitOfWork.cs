@@ -50,10 +50,10 @@ namespace RK.Framework.Database.Impl
         public void RollbackTransaction()
         {
             DataContext.Database.RollbackTransaction();
-            foreach (var item in DataContext.ChangeTracker.Entries())
-            {
-                item.State = EntityState.Detached;
-            }
+            //foreach (var item in DataContext.ChangeTracker.Entries())
+            //{
+            //    item.State = EntityState.Detached;
+            //}
         }
     }
 }

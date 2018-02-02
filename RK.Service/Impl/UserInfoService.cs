@@ -8,13 +8,23 @@ using System.Linq;
 using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
+using Microsoft.Extensions.Caching.Memory;
+using IdentityModel.Client;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace RK.Service.Impl
 {
     public class UserInfoService : BaseService<UserInfo, IUserInfoRepository>, IUserInfoService
     {
-        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository) : base(unitOfWork, repository)
+        private IMemoryCache _cache;
+        private readonly ILogger<UserInfoService> _logger;
+        private readonly string _identityServer4Url;
+        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IMemoryCache cache, ILogger<UserInfoService> logger) : base(unitOfWork, repository)
         {
+            _cache = cache;
+            _logger = logger;
+            _identityServer4Url = ConfigHelper.ConfigurationBuilder.GetSection("IdentityServer4Url").Value;
         }
 
         public bool AuthUser(string account, string password)
@@ -25,41 +35,77 @@ namespace RK.Service.Impl
             return false;
         }
 
-        public ReturnStatus<UserInfoResponse> Create(UserSignUpRequest request)
+        public async Task<ReturnStatus<UserSignInResponse>> CreateAsync(UserSignUpRequest request)
         {
             var isExist = _repository.IsExist(m => m.Account == request.Account);
             if (isExist)
-                return ReturnStatus<UserInfoResponse>.Error("该帐号已存在");
-            var user = new UserInfo
+                return ReturnStatus<UserSignInResponse>.Error("该帐号已存在");
+            try
             {
-                Account = request.Account,
-                Password = EncryptHelper.AESEncrypt(request.Password)
-            };
-            _repository.Add(user);
-            _unitOfWork.Commit();
-            return ReturnStatus<UserInfoResponse>.Success("注册成功", new UserInfoResponse
+                var user = new UserInfo
+                {
+                    Account = request.Account,
+                    Password = EncryptHelper.AESEncrypt(request.Password)
+                };
+                _repository.Add(user);
+                _unitOfWork.Commit();
+
+
+                try
+                {
+                    var token = await GetToken(request.Account, request.Password);
+                    _cache.Set(user.Id, $"{token.token_type} {token.access_token}", TimeSpan.FromSeconds(token.expires_in));
+                    return ReturnStatus<UserSignInResponse>.Success("注册成功", new UserSignInResponse
+                    {
+                        UserInfo = new Model.Dto.Reponse.UserInfoResponse
+                        {
+                            Id = user.Id,
+                            Account = user.Account,
+                            AvatarUrl = user.AvatarUrl,
+                            Email = user.Email,
+                            Name = user.Name,
+                            Phone = user.Phone,
+                            Sex = user.Sex
+                        },
+                        Token = token
+                    });
+                }
+                catch (Exception)
+                {
+                    throw new Exception("注册成功，获取 Token 失败，请重新登录");
+                }
+
+            }
+            catch (Exception)
             {
-                Id = user.Id,
-                Account = user.Account
-            });
+                throw;
+            }
         }
 
-        public ReturnStatus<UserInfoResponse> Get(string account)
+        public async Task<ReturnStatus<UserSignInResponse>> LoginAsync(UserSignInRequest request)
         {
-            var user = _repository.Get(m => m.Account == account);
+            var user = _repository.Get(m => m.Account == request.Account);
             if (user != null)
-                return ReturnStatus<UserInfoResponse>.Success(null, new UserInfoResponse
+            {
+                var token = await GetToken(request.Account, request.Password);
+                _cache.Set(user.Id, $"{token.token_type} {token.access_token}", TimeSpan.FromSeconds(token.expires_in));
+                return ReturnStatus<UserSignInResponse>.Success("登录成功", new UserSignInResponse
                 {
-                    Id = user.Id,
-                    Account = user.Account,
-                    AvatarUrl = user.AvatarUrl,
-                    Email = user.Email,
-                    Name = user.Name,
-                    Phone = user.Phone,
-                    Sex = user.Sex
+                    UserInfo = new Model.Dto.Reponse.UserInfoResponse
+                    {
+                        Id = user.Id,
+                        Account = user.Account,
+                        AvatarUrl = user.AvatarUrl,
+                        Email = user.Email,
+                        Name = user.Name,
+                        Phone = user.Phone,
+                        Sex = user.Sex
+                    },
+                    Token = token
                 });
+            }
             else
-                return ReturnStatus<UserInfoResponse>.Error("该帐号不存在");
+                return ReturnStatus<UserSignInResponse>.Error("该帐号不存在");
         }
 
         public UserInfo GetUserByAccount(string account)
@@ -84,6 +130,38 @@ namespace RK.Service.Impl
             }
             else
                 return ReturnStatus.Error("该帐号不存在");
+        }
+
+        private async Task<UserSignInResponse.TokenModel> GetToken(string account, string password)
+        {
+            try
+            {
+                var disco = await DiscoveryClient.GetAsync(_identityServer4Url);
+                if (disco.IsError)
+                {
+                    throw new Exception(disco.Error);
+                }
+
+                var tokenClient = new TokenClient(disco.TokenEndpoint, "pwd_client", "pwd_secret");
+                var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(account, password, "rk offline_access");
+                if (tokenResponse.IsError)
+                {
+                    throw new Exception(tokenResponse.Error);
+                }
+                return new UserSignInResponse.TokenModel
+                {
+                    access_token = tokenResponse.AccessToken,
+                    expires_in = tokenResponse.ExpiresIn,
+                    refresh_token = tokenResponse.RefreshToken,
+                    token_type = tokenResponse.TokenType
+                };
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.ToString());
+
+                throw new Exception("注册失败，获取 Token 异常");
+            }
         }
     }
 }

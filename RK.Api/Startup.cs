@@ -43,6 +43,8 @@ namespace RK.Api
 
                     options.ApiName = "rk";
                 });
+
+            services.AddMemoryCache();
             services.AddMvc()
                 .AddJsonOptions(options =>
                 {
@@ -102,6 +104,7 @@ namespace RK.Api
 
             //app.UseMiddleware(typeof(TokenProviderMiddleware));
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
+            //app.UseTokenAndUserIdMiddleware();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

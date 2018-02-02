@@ -7,7 +7,8 @@ using RK.Service;
 using Microsoft.AspNetCore.Authorization;
 using RK.Infrastructure;
 using RK.Model.Dto.Request;
-using RK.Model.Dto.Reponse;
+using Response = RK.Model.Dto.Reponse;
+using IdentityModel.Client;
 
 namespace RK.Api.Controllers
 {
@@ -21,26 +22,30 @@ namespace RK.Api.Controllers
             _userInfoService = userInfoService;
         }
 
-        // GET api/userInfo/5
-        [HttpGet("{account}")]
-        public ReturnStatus<UserInfoResponse> Get(string account)
+        [HttpPost("Login")]
+        [AllowAnonymous]
+        public async Task<ReturnStatus<Response.UserSignInResponse>> Login([FromBody]UserSignInRequest request)
         {
-            return _userInfoService.Get(account);
-        }
+            if (!ModelState.IsValid)
+            {
+                return ReturnStatus<Response.UserSignInResponse>.Error("请求参数有误");
+            }           
 
+            return await _userInfoService.LoginAsync(request);
+        }
         /// <summary>
         /// 注册
         /// </summary>
         /// <param name="request"></param>
         [HttpPost]
         [AllowAnonymous]
-        public ReturnStatus<UserInfoResponse> Post([FromBody]UserSignUpRequest request)
+        public async Task<ReturnStatus<Response.UserSignInResponse>> Post([FromBody]UserSignUpRequest request)
         {
             if (!ModelState.IsValid)
             {
-                return ReturnStatus<UserInfoResponse>.Error("请求参数有误");
+                return ReturnStatus<Response.UserSignInResponse>.Error("请求参数有误");
             }
-            return _userInfoService.Create(request);
+            return await _userInfoService.CreateAsync(request);
         }
 
         /// <summary>

@@ -9,6 +9,8 @@ using Microsoft.AspNetCore.Authorization;
 using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
+using RK.Api.Common.Filters;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace RK.Api.Controllers
 {
@@ -18,11 +20,13 @@ namespace RK.Api.Controllers
     {
         private readonly IAccountTypeService _accountTypeService;
         private readonly IAccountRecordService _accountRecordService;
+        private IMemoryCache _cache;
 
-        public AccountController(IAccountTypeService accountRecordTypeService, IAccountRecordService accountRecordService)
+        public AccountController(IAccountTypeService accountRecordTypeService, IAccountRecordService accountRecordService, IMemoryCache cache)
         {
             _accountTypeService = accountRecordTypeService;
             _accountRecordService = accountRecordService;
+            _cache = cache;
         }
 
         [HttpGet("Types/{userId}")]
@@ -37,6 +41,7 @@ namespace RK.Api.Controllers
             return _accountRecordService.Get(id);
         }
 
+        [TokenAndUserIdValidateFilter]
         [HttpGet("List")]
         public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
@@ -67,14 +72,14 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{id}")]
-        public ReturnStatus Put(int id, [FromBody]AccountRequest request)
+        [HttpPut("{userId}")]
+        public ReturnStatus Put(int userId, [FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return ReturnStatus.Error("请求参数有误");
             }
-            return _accountRecordService.Update(id, request);
+            return _accountRecordService.Update(userId, request);
         }
 
         /// <summary>

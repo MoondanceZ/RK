@@ -37,10 +37,14 @@ namespace RK.Api.Common.Middleware
 
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
+            var errorStr = "操作异常";
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
 
             if (exception is UnauthorizedAccessException)
+            {
                 code = HttpStatusCode.Unauthorized;
+                errorStr = "权限不足";
+            }
             else if (exception is NotImplementedException)
                 code = HttpStatusCode.NotImplemented;
             else if (exception is ArgumentException)
@@ -48,7 +52,7 @@ namespace RK.Api.Common.Middleware
 
             context.Response.ContentType = "application/json;charset=utf-8";
             context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(JsonHelper.Serialize(ReturnStatus.Error("操作异常！")));
+            return context.Response.WriteAsync(JsonHelper.Serialize(ReturnStatus.Error(errorStr)));
         }
     }
 }

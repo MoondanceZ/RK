@@ -5,6 +5,7 @@ using System.Text;
 using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
+using System.Threading.Tasks;
 
 namespace RK.Service
 {
@@ -12,8 +13,8 @@ namespace RK.Service
     {
         bool AuthUser(string username, string password);
         UserInfo GetUserByAccount(string account);
-        ReturnStatus<UserInfoResponse> Create(UserSignUpRequest request);
-        ReturnStatus<UserInfoResponse> Get(string account);
+        Task<ReturnStatus<UserSignInResponse>> CreateAsync(UserSignUpRequest request);
         ReturnStatus Update(UpdateUserRequest request);
+        Task<ReturnStatus<UserSignInResponse>> LoginAsync(UserSignInRequest request);
     }
 }
