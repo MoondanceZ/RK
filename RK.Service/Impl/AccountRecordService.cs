@@ -11,19 +11,22 @@ using NLog;
 using RK.Model.Dto.Reponse;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace RK.Service.Impl
 {
     public class AccountRecordService : BaseService<AccountRecord, IAccountRecordRepository>, IAccountRecordService
     {
         private readonly ILogger<AccountRecordService> _logger;
-        public AccountRecordService(IUnitOfWork unitOfWork, IAccountRecordRepository repository, ILogger<AccountRecordService> logger) : base(unitOfWork, repository)
+        public AccountRecordService(IUnitOfWork unitOfWork, IAccountRecordRepository repository, IHttpContextAccessor httpConetext, ILogger<AccountRecordService> logger) : base(unitOfWork, repository, httpConetext)
         {
             _logger = logger;
         }
 
         public ReturnStatus<AccountResponse> Create(AccountRequest request)
         {
+            if (!CheckCurrentUserValid(request.UserId))
+                throw new Exception("无权限操作");
             try
             {
                 var record = new AccountRecord
@@ -52,7 +55,7 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Create AccountRecord Error: {ex}");
-                return ReturnStatus<AccountResponse>.Error("添加失败");
+                throw new Exception("添加失败");
             }
         }
 
@@ -62,7 +65,9 @@ namespace RK.Service.Impl
             {
                 var record = _repository.GetAllLazy().Include(m => m.AccountType).Where(m => m.Id == id).FirstOrDefault();
                 if (record == null)
-                    return ReturnStatus<AccountResponse>.Error("该记录不存在");
+                    throw new Exception("该记录不存在");
+                if (!CheckCurrentUserValid(record.UserInfoId))
+                    throw new Exception("无权限操作");
 
                 return ReturnStatus<AccountResponse>.Success(null, new AccountResponse
                 {
@@ -80,12 +85,15 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Query AccountRecord Error: {ex}");
-                return ReturnStatus<AccountResponse>.Error("查询失败");
+                throw ex;
             }
         }
 
         public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
+            if (!CheckCurrentUserValid(request.UserId))
+                throw new Exception("无权限操作");
+
             var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
                 .Where(m => m.UserInfoId == request.UserId)
@@ -136,11 +144,14 @@ namespace RK.Service.Impl
 
         public ReturnStatus Update(int id, AccountRequest request)
         {
+
+            var record = _repository.Get(m => m.Id == id);
+            if (record == null)
+                throw new Exception("更新失败，记录不存在");
+            if (!CheckCurrentUserValid(record.UserInfoId))
+                throw new Exception("无权限操作");
             try
             {
-                var record = _repository.Get(m => m.Id == id);
-                if (record == null)
-                    return ReturnStatus<AccountResponse>.Error("更新失败，记录不存在");
                 record.AccountDate = request.AccountDate;
                 record.AccountTypeId = request.AccountTypeId;
                 record.Amount = request.Amount;
@@ -156,17 +167,20 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Update AccountRecord Error: {ex}");
-                return ReturnStatus.Error("更新失败");
+                throw new Exception("更新失败");
             }
         }
 
         public ReturnStatus Delete(int id)
         {
+
+            var record = _repository.Get(m => m.Id == id);
+            if (record == null)
+                throw new Exception("删除失败，记录不存在");
+            if (!CheckCurrentUserValid(record.UserInfoId))
+                throw new Exception("无权限操作");
             try
             {
-                var record = _repository.Get(m => m.Id == id);
-                if (record == null)
-                    return ReturnStatus<AccountResponse>.Error("删除失败，记录不存在");
                 record.Status = -1;
                 _repository.Update(record);
                 _unitOfWork.Commit();
@@ -175,7 +189,7 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Delete AccountRecord Error: {ex}");
-                return ReturnStatus.Error("删除失败");
+                throw new Exception("删除失败");
             }
         }
     }

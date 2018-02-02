@@ -32,6 +32,7 @@ namespace RK.Api.Controllers
         [HttpGet("Types/{userId}")]
         public ReturnStatus<List<AccountType>> Types(int userId)
         {
+            //HttpContext.
             return _accountTypeService.GetAccountRecordTypes(userId);
         }
 
@@ -40,8 +41,7 @@ namespace RK.Api.Controllers
         {
             return _accountRecordService.Get(id);
         }
-
-        [TokenAndUserIdValidateFilter]
+        
         [HttpGet("List")]
         public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
@@ -72,14 +72,14 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        [HttpPut("{userId}")]
-        public ReturnStatus Put(int userId, [FromBody]AccountRequest request)
+        [HttpPut("{id}")]
+        public ReturnStatus Put(int id, [FromBody]AccountRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return ReturnStatus.Error("请求参数有误");
             }
-            return _accountRecordService.Update(userId, request);
+            return _accountRecordService.Update(id, request);
         }
 
         /// <summary>

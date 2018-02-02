@@ -30,7 +30,7 @@ namespace RK.IdentityServer4.OAuth2
                         if (context.Password == EncryptHelper.AESDecrypt(userInfo.Password))
                         {
                             //set the result
-                            context.Result = new GrantValidationResult(subject: context.UserName, authenticationMethod: "Resource Owner Password");
+                            context.Result = new GrantValidationResult(subject: EncryptHelper.AESEncrypt(userInfo.Id.ToString()), authenticationMethod: "Resource Owner Password");
                         }
                         else
                         {

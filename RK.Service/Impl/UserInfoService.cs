@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using IdentityModel.Client;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Http;
 
 namespace RK.Service.Impl
 {
@@ -20,7 +21,7 @@ namespace RK.Service.Impl
         private IMemoryCache _cache;
         private readonly ILogger<UserInfoService> _logger;
         private readonly string _identityServer4Url;
-        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IMemoryCache cache, ILogger<UserInfoService> logger) : base(unitOfWork, repository)
+        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IMemoryCache cache, IHttpContextAccessor httpConetext, ILogger<UserInfoService> logger) : base(unitOfWork, repository, httpConetext)
         {
             _cache = cache;
             _logger = logger;
@@ -39,7 +40,7 @@ namespace RK.Service.Impl
         {
             var isExist = _repository.IsExist(m => m.Account == request.Account);
             if (isExist)
-                return ReturnStatus<UserSignInResponse>.Error("该帐号已存在");
+                throw new Exception("该帐号已存在");
             try
             {
                 var user = new UserInfo
@@ -105,7 +106,7 @@ namespace RK.Service.Impl
                 });
             }
             else
-                return ReturnStatus<UserSignInResponse>.Error("该帐号不存在");
+                throw new Exception("该帐号不存在");
         }
 
         public UserInfo GetUserByAccount(string account)
@@ -115,6 +116,9 @@ namespace RK.Service.Impl
 
         public ReturnStatus Update(UpdateUserRequest request)
         {
+            if (!CheckCurrentUserValid(request.Id))
+                throw new Exception("无权限操作");
+
             var user = _repository.Get(m => m.Id == request.Id);
             if (user != null)
             {
@@ -129,7 +133,7 @@ namespace RK.Service.Impl
                 return ReturnStatus.Success("更新成功");
             }
             else
-                return ReturnStatus.Error("该帐号不存在");
+                throw new Exception("该帐号不存在");
         }
 
         private async Task<UserSignInResponse.TokenModel> GetToken(string account, string password)
