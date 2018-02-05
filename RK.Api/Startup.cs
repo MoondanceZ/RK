@@ -17,6 +17,7 @@ using System;
 using System.Linq;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
 
 namespace RK.Api
 {
@@ -62,6 +63,7 @@ namespace RK.Api
             var builder = new ContainerBuilder();
             builder.RegisterType<DatabaseFactory>().As<IDatabaseFactory>().AsImplementedInterfaces().InstancePerLifetimeScope();
             builder.RegisterType<UnitOfWork>().As<IUnitOfWork>().AsImplementedInterfaces().InstancePerLifetimeScope();
+            builder.RegisterType<HttpContextAccessor>().As<IHttpContextAccessor>().AsImplementedInterfaces().InstancePerLifetimeScope();
 
             var repos = Assembly.Load("RK.Repository");
             builder.RegisterAssemblyTypes(repos, repos)

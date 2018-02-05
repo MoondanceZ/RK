@@ -38,10 +38,12 @@ namespace RK.Api.Common.Middleware
         private static Task HandleExceptionAsync(HttpContext context, Exception exception)
         {
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
+            var errorStr = "操作异常";
 
             if (exception is UnauthorizedAccessException)
             {
                 code = HttpStatusCode.Unauthorized;
+                errorStr = exception.Message;
             }
             //else if (exception is NotImplementedException)
             //    code = HttpStatusCode.NotImplemented;
@@ -50,7 +52,7 @@ namespace RK.Api.Common.Middleware
 
             context.Response.ContentType = "application/json;charset=utf-8";
             context.Response.StatusCode = (int)code;
-            return context.Response.WriteAsync(JsonHelper.Serialize(ReturnStatus.Error(exception.Message)));
+            return context.Response.WriteAsync(JsonHelper.Serialize(ReturnStatus.Error(errorStr)));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace RK.Service.Impl
         private IMemoryCache _cache;
         private readonly ILogger<UserInfoService> _logger;
         private readonly string _identityServer4Url;
-        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IMemoryCache cache, IHttpContextAccessor httpConetext, ILogger<UserInfoService> logger) : base(unitOfWork, repository, httpConetext)
+        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IHttpContextAccessor httpConetext, IMemoryCache cache, ILogger<UserInfoService> logger) : base(unitOfWork, repository, httpConetext)
         {
             _cache = cache;
             _logger = logger;
@@ -164,7 +164,7 @@ namespace RK.Service.Impl
             {
                 _logger.LogError(ex, ex.ToString());
 
-                throw new Exception("注册失败，获取 Token 异常");
+                throw new UnauthorizedAccessException("获取 Token 异常");
             }
         }
     }
