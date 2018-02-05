@@ -25,9 +25,19 @@ namespace RK.Infrastructure
             return _container.Resolve<T>();
         }
 
+        public static T Resolve<T>(string serviceName)
+        {
+            return _container.ResolveNamed<T>(serviceName);
+        }
+
         public static object Resolve(Type type)
         {
             return _container.Resolve(type);
+        }
+
+        public static object Resolve(Type type, string serviceName)
+        {
+            return _container.ResolveNamed(serviceName, type);
         }
     }
 }
