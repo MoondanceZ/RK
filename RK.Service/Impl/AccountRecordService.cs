@@ -181,8 +181,7 @@ namespace RK.Service.Impl
                 throw new Exception("无权限操作");
             try
             {
-                record.Status = -1;
-                _repository.Update(record);
+                _repository.Delete(record);
                 _unitOfWork.Commit();
                 return ReturnStatus.Success("删除成功");
             }

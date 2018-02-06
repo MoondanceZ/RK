@@ -11,5 +11,16 @@ namespace RK.Repository.Impl
         public AccountRecordRepository(IDatabaseFactory databaseFactory) : base(databaseFactory)
         {
         }
+
+        /// <summary>
+        /// 逻辑删
+        /// </summary>
+        /// <param name="entity"></param>
+        public override void Delete(AccountRecord entity)
+        {
+            entity.Status = -1;
+            entity.DeletedTime = DateTime.Now;
+            base.Update(entity);
+        }
     }
 }
