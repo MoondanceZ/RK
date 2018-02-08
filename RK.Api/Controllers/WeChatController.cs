@@ -34,7 +34,7 @@ namespace RK.Api.Controllers
         }
 
         [HttpGet("Login")]
-        public async Task<dynamic> Login(string code)
+        public async Task<ReturnStatus<WeChatUserInfoResponse>> Login(string code)
         {
             var requestUrl = apiUrl + $"sns/jscode2session?appid={appId}&secret={appSecret}&js_code={code}&grant_type=authorization_code";
             using (HttpClient client = new HttpClient())
@@ -44,7 +44,7 @@ namespace RK.Api.Controllers
                 var weChatResponse = JsonHelper.Deserialize<WeChatOpenIdResponse>(result);
                 if (!String.IsNullOrWhiteSpace(weChatResponse.session_key) && !String.IsNullOrWhiteSpace(weChatResponse.openid))
                 {
-                    return _userInfoService.GetWeChatUser(weChatResponse.openid);
+                    return await _userInfoService.GetWeChatUser(weChatResponse.openid);
                 }
                 else
                     throw new WeChatException(weChatResponse.errmsg);
