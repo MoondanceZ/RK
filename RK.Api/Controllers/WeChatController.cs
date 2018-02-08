@@ -42,12 +42,12 @@ namespace RK.Api.Controllers
                 var result = await client.GetStringAsync(requestUrl);
 
                 var weChatResponse = JsonHelper.Deserialize<WeChatOpenIdResponse>(result);
-                if (!String.IsNullOrWhiteSpace(weChatResponse.session_key) && !String.IsNullOrWhiteSpace(weChatResponse.openid))
+                if (!String.IsNullOrWhiteSpace(weChatResponse.SessionKey) && !String.IsNullOrWhiteSpace(weChatResponse.OpenId))
                 {
-                    return await _userInfoService.GetWeChatUser(weChatResponse.openid);
+                    return await _userInfoService.GetWeChatUser(weChatResponse.OpenId);
                 }
                 else
-                    throw new WeChatException(weChatResponse.errmsg);
+                    throw new WeChatException(weChatResponse.ErrMsg);
             }
         }
     }

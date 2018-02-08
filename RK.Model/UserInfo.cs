@@ -11,7 +11,7 @@ namespace RK.Model
         [StringLength(64)]
         public string WeChatOpenID { get; set; }
         [Required]
-        [StringLength(20)]
+        [StringLength(64)]
         public string Account { get; set; }
         [StringLength(20)]
         public string Name { get; set; }

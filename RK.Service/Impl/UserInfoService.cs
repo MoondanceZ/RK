@@ -151,10 +151,10 @@ namespace RK.Service.Impl
                 }
                 return new TokenModel
                 {
-                    access_token = tokenResponse.AccessToken,
-                    expires_in = tokenResponse.ExpiresIn,
-                    refresh_token = tokenResponse.RefreshToken,
-                    token_type = tokenResponse.TokenType
+                    Accesstoken = tokenResponse.AccessToken,
+                    ExpiresIn = tokenResponse.ExpiresIn,
+                    RefreshToken = tokenResponse.RefreshToken,
+                    TokenType = tokenResponse.TokenType
                 };
             }
             catch (Exception ex)

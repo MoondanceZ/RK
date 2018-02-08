@@ -39,10 +39,8 @@ namespace RK.Api.Common.Filters
                 {
                     userIdStr = httpContext.Request.Form["UserId"];
                 }
-                var userId = 0;
-                int.TryParse(userIdStr, out userId);
-
-                if (userId != 0)
+                
+                if(int.TryParse(userIdStr, out int userId))
                 {
                     var cacheToken = _cache.Get<string>(userId);
                     var curToken = httpContext.Request.Headers["Authorization"].ToString();
