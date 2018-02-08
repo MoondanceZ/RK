@@ -5,10 +5,9 @@ using System.Text;
 
 namespace RK.Model.Dto.Reponse
 {
-    public class UserSignInResponse
+    public class WeChatUserInfoResponse
     {
-        public UserInfoResponse UserInfo { get; set; }
+        public int Id { get; set; }
         public TokenModel Token { get; set; }
     }
-
 }

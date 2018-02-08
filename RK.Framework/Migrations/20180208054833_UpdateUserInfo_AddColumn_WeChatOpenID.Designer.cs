@@ -11,9 +11,10 @@ using System;
 namespace RK.Framework.Migrations
 {
     [DbContext(typeof(RkDbContext))]
-    partial class RkDbContextModelSnapshot : ModelSnapshot
+    [Migration("20180208054833_UpdateUserInfo_AddColumn_WeChatOpenID")]
+    partial class UpdateUserInfo_AddColumn_WeChatOpenID
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

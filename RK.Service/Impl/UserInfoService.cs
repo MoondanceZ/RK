@@ -13,17 +13,16 @@ using IdentityModel.Client;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
+using RK.Model.Dto.Common;
 
 namespace RK.Service.Impl
 {
     public class UserInfoService : BaseService<UserInfo, IUserInfoRepository>, IUserInfoService
     {
-        private IMemoryCache _cache;
         private readonly ILogger<UserInfoService> _logger;
         private readonly string _identityServer4Url;
-        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IHttpContextAccessor httpConetext, IMemoryCache cache, ILogger<UserInfoService> logger) : base(unitOfWork, repository, httpConetext)
+        public UserInfoService(IUnitOfWork unitOfWork, IUserInfoRepository repository, IHttpContextAccessor httpConetext, ILogger<UserInfoService> logger) : base(unitOfWork, repository, httpConetext)
         {
-            _cache = cache;
             _logger = logger;
             _identityServer4Url = ConfigHelper.ConfigurationBuilder.GetSection("IdentityServer4Url").Value;
         }
@@ -55,7 +54,6 @@ namespace RK.Service.Impl
                 try
                 {
                     var token = await GetToken(request.Account, request.Password);
-                    _cache.Set(user.Id, $"{token.token_type} {token.access_token}", TimeSpan.FromSeconds(token.expires_in));
                     return ReturnStatus<UserSignInResponse>.Success("注册成功", new UserSignInResponse
                     {
                         UserInfo = new Model.Dto.Reponse.UserInfoResponse
@@ -89,7 +87,6 @@ namespace RK.Service.Impl
             if (user != null)
             {
                 var token = await GetToken(request.Account, request.Password);
-                _cache.Set(user.Id, $"{token.token_type} {token.access_token}", TimeSpan.FromSeconds(token.expires_in));
                 return ReturnStatus<UserSignInResponse>.Success("登录成功", new UserSignInResponse
                 {
                     UserInfo = new Model.Dto.Reponse.UserInfoResponse
@@ -136,7 +133,7 @@ namespace RK.Service.Impl
                 throw new Exception("该帐号不存在");
         }
 
-        private async Task<UserSignInResponse.TokenModel> GetToken(string account, string password)
+        private async Task<TokenModel> GetToken(string account, string password)
         {
             try
             {
@@ -152,7 +149,7 @@ namespace RK.Service.Impl
                 {
                     throw new Exception(tokenResponse.Error);
                 }
-                return new UserSignInResponse.TokenModel
+                return new TokenModel
                 {
                     access_token = tokenResponse.AccessToken,
                     expires_in = tokenResponse.ExpiresIn,
@@ -165,6 +162,53 @@ namespace RK.Service.Impl
                 _logger.LogError(ex, ex.ToString());
 
                 throw new UnauthorizedAccessException("获取 Token 异常");
+            }
+        }
+
+        public async Task<ReturnStatus<WeChatUserInfoResponse>> GetWeChatUser(string openId)
+        {
+            var user = _repository.Get(m => m.WeChatOpenID == openId);
+            if (user != null)
+            {
+                var token = await GetToken(user.Account, user.Password);
+                return ReturnStatus<WeChatUserInfoResponse>.Success(null, new WeChatUserInfoResponse
+                {
+                    Id = user.Id,
+                    Token = token
+                });
+            }
+            else
+            {
+                try
+                {
+                    user = new UserInfo
+                    {
+                        Account = openId,
+                        Password = EncryptHelper.AESEncrypt("#WY_YK#")
+                    };
+                    _repository.Add(user);
+                    _unitOfWork.Commit();
+
+
+                    try
+                    {
+                        var token = await GetToken(openId, "#WY_YK#");
+                        return ReturnStatus<WeChatUserInfoResponse>.Success(null, new WeChatUserInfoResponse
+                        {
+                            Id = user.Id,
+                            Token = token
+                        });
+                    }
+                    catch (Exception)
+                    {
+                        throw new Exception("注册成功，获取 Token 失败，请重新登录");
+                    }
+
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
             }
         }
     }

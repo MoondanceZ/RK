@@ -7,15 +7,13 @@ namespace RK.Infrastructure
     public class ReturnStatus
     {
         public bool IsSuccess { get; set; }
-        public string ErrorCode { get; set; }
         public string Message { get; set; }
 
-        public static ReturnStatus Error(string message, string errorCode = null)
+        public static ReturnStatus Error(string message)
         {
             return new ReturnStatus
             {
                 IsSuccess = false,
-                ErrorCode = errorCode,
                 Message = message
             };
         }
@@ -25,7 +23,6 @@ namespace RK.Infrastructure
             return new ReturnStatus
             {
                 IsSuccess = true,
-                ErrorCode = null,
                 Message = message,
             };
         }
@@ -38,19 +35,17 @@ namespace RK.Infrastructure
             return new ReturnStatus<T>
             {
                 IsSuccess = true,
-                ErrorCode = null,
                 Message = message,
                 Data = data
             };
         }
 
-        public new static ReturnStatus<T> Error(string message, string errorCode = null)
+        public new static ReturnStatus<T> Error(string message)
         {
             return new ReturnStatus<T>
             {
                 IsSuccess = false,
-                Message = message,
-                ErrorCode = errorCode
+                Message = message
             };
         }
     }

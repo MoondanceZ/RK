@@ -8,6 +8,8 @@ namespace RK.Model
     {
         [Key]
         public int Id { get; set; }
+        [StringLength(64)]
+        public string WeChatOpenID { get; set; }
         [Required]
         [StringLength(20)]
         public string Account { get; set; }
