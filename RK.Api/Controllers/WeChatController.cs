@@ -9,6 +9,7 @@ using System.Net.Http;
 using RK.Model.Dto.Reponse;
 using Microsoft.Extensions.Caching.Memory;
 using RK.Service;
+using RK.Api.Common.Exceptions;
 
 namespace RK.Api.Controllers
 {
@@ -46,7 +47,7 @@ namespace RK.Api.Controllers
                     return _userInfoService.GetWeChatUser(weChatResponse.openid);
                 }
                 else
-                    throw new Exception(weChatResponse.errmsg);
+                    throw new WeChatException(weChatResponse.errmsg);
             }
         }
     }
