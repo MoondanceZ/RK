@@ -183,6 +183,7 @@ namespace RK.Service.Impl
                 {
                     user = new UserInfo
                     {
+                        WeChatOpenID = openId,
                         Account = openId,
                         Password = EncryptHelper.AESEncrypt("#WY_YK#")
                     };
