@@ -53,7 +53,7 @@ namespace RK.Api.Controllers
         /// </summary>
         /// <param name="id"></param>
         /// <param name="request"></param>
-        [HttpPut("{id}")]
+        [HttpPut]
         public ReturnStatus Put([FromBody]UpdateUserRequest request)
         {
             if (!ModelState.IsValid)
