@@ -121,7 +121,7 @@ namespace RK.Service.Impl
             {
                 user.AvatarUrl = request.AvatarUrl;
                 user.Email = request.Email;
-                user.Password = EncryptHelper.AESEncrypt(request.Password);
+                //user.Password = EncryptHelper.AESEncrypt(request.Password);
                 user.Phone = request.Phone;
                 user.Name = request.Name;
                 user.Sex = request.Sex;
