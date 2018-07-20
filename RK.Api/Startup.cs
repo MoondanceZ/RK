@@ -94,7 +94,7 @@ namespace RK.Api
             }
 
             app.UseCors(options =>
-                        options.AllowAnyOrigin()
+                        options.WithOrigins(Configuration["CorsApi"].Split(',', StringSplitOptions.RemoveEmptyEntries))
                                .AllowAnyMethod()
                                .AllowAnyHeader()
                                .AllowCredentials()

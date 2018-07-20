@@ -137,7 +137,13 @@ namespace RK.Service.Impl
         {
             try
             {
-                var disco = await DiscoveryClient.GetAsync(_identityServer4Url);
+                var discoveryClient = new DiscoveryClient(_identityServer4Url);
+                if (_identityServer4Url.StartsWith("http", StringComparison.OrdinalIgnoreCase))
+                {
+                    discoveryClient.Policy.RequireHttps = false;
+                }
+                var disco = await discoveryClient.GetAsync();
+
                 if (disco.IsError)
                 {
                     throw new Exception(disco.Error);
