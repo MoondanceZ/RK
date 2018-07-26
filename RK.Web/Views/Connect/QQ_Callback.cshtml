@@ -26,8 +26,8 @@
 @if (userInfo != null)
 {
     <script>
-        var userInfo = "@RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.UserInfo)";
-        var token = "@RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.Token)";
+        var userInfo = "@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.UserInfo))";
+        var token = "@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.Token))";
 
         sessionStorage.setItem("User", userInfo);
         sessionStorage.setItem("Token", token);
