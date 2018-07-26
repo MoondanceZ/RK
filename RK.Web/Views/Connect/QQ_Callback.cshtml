@@ -1,0 +1,43 @@
+﻿@using RK.Infrastructure
+@using RK.Model.Dto.Reponse
+@{
+    Layout = null;
+    var userInfo = ViewBag.UserLogin as ReturnStatus<UserSignInResponse>;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>RoundKing - 登陆跳转</title>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+</head>
+<body>
+    @if (userInfo != null)
+    {
+        <p>登陆成功, 正在跳转...</p>
+    }
+    else
+    {
+        <p>登陆失败, 3秒后返回首页...</p>
+    }
+</body>
+</html>
+
+@if (userInfo != null)
+{
+    <script>
+        var userInfo = "@RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.UserInfo)";
+        var token = "@RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.Token)";
+
+        sessionStorage.setItem("User", userInfo);
+        sessionStorage.setItem("Token", token);
+    </script>
+}
+else
+{
+    <script>
+        setTimeout(function () {
+            window.location.href = window.location.href = window.location.href.split("//")[0] + "//" + window.location.host;
+        }, 3000);
+    </script>
+}

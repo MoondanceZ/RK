@@ -9,7 +9,11 @@ namespace RK.Model
         [Key]
         public int Id { get; set; }
         [StringLength(64)]
-        public string WeChatOpenID { get; set; }
+        public string WeChatOpenId { get; set; }
+        [StringLength(64)]
+        public string QQOpenID { get; set; }
+        [StringLength(64)]
+        public string WeiboOpenId { get; set; }
         [Required]
         [StringLength(64)]
         public string Account { get; set; }

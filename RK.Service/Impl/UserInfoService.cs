@@ -86,6 +86,8 @@ namespace RK.Service.Impl
             var user = _repository.Get(m => m.Account == request.Account);
             if (user != null)
             {
+                if (request.Password != EncryptHelper.AESDecrypt(user.Password))
+                    throw new Exception("帐号密码有误");
                 var token = await GetToken(request.Account, request.Password);
                 return ReturnStatus<UserSignInResponse>.Success("登录成功", new UserSignInResponse
                 {
@@ -173,7 +175,7 @@ namespace RK.Service.Impl
 
         public async Task<ReturnStatus<WeChatUserInfoResponse>> GetWeChatUser(string openId)
         {
-            var user = _repository.Get(m => m.WeChatOpenID == openId);
+            var user = _repository.Get(m => m.WeChatOpenId == openId);
             if (user != null)
             {
                 var token = await GetToken(user.Account, user.Password);
@@ -189,9 +191,9 @@ namespace RK.Service.Impl
                 {
                     user = new UserInfo
                     {
-                        WeChatOpenID = openId,
-                        Account = openId,
-                        Password = EncryptHelper.AESEncrypt("#WY_YK#")
+                        WeChatOpenId = openId,
+                        Account = GetRandomAccount("wechat"),
+                        Password = StringHelper.RndomStr(8)
                     };
                     _repository.Add(user);
                     _unitOfWork.Commit();
@@ -199,7 +201,7 @@ namespace RK.Service.Impl
 
                     try
                     {
-                        var token = await GetToken(openId, "#WY_YK#");
+                        var token = await GetToken(openId, user.Password);
                         return ReturnStatus<WeChatUserInfoResponse>.Success(null, new WeChatUserInfoResponse
                         {
                             Id = user.Id,
@@ -217,6 +219,22 @@ namespace RK.Service.Impl
                     throw;
                 }
             }
+        }
+
+        public UserInfo GetQQUser(string openId)
+        {
+            return _repository.Get(m => m.QQOpenID == openId);
+        }
+
+        public string GetRandomAccount(string prefix)
+        {
+            var randomAccount = prefix + "_" + StringHelper.RndomStr(8);
+
+            do
+            {
+                randomAccount = prefix + "_" + StringHelper.RndomStr(8);
+            } while (_repository.IsExist(m => m.Account == randomAccount));
+            return randomAccount;
         }
     }
 }

@@ -17,5 +17,7 @@ namespace RK.Service
         ReturnStatus Update(UpdateUserRequest request);
         Task<ReturnStatus<UserSignInResponse>> LoginAsync(UserSignInRequest request);
         Task<ReturnStatus<WeChatUserInfoResponse>> GetWeChatUser(string openId);
+        UserInfo GetQQUser(string openId);
+        string GetRandomAccount(string prefix);
     }
 }
