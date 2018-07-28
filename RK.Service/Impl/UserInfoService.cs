@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http;
 using RK.Model.Dto.Common;
+using RK.Infrastructure.Exceptions;
 
 namespace RK.Service.Impl
 {
@@ -39,7 +40,7 @@ namespace RK.Service.Impl
         {
             var isExist = _repository.IsExist(m => m.Account == request.Account);
             if (isExist)
-                throw new Exception("该帐号已存在");
+                throw new ApiException("该帐号已存在");
             try
             {
                 var user = new UserInfo
@@ -76,7 +77,7 @@ namespace RK.Service.Impl
                 }
                 catch (Exception)
                 {
-                    throw new Exception("注册成功，获取 Token 失败，请重新登录");
+                    throw new ApiException("注册成功，获取 Token 失败，请重新登录");
                 }
 
             }
@@ -92,7 +93,7 @@ namespace RK.Service.Impl
             if (user != null)
             {
                 if (request.Password != EncryptHelper.AESDecrypt(user.Password))
-                    throw new Exception("帐号密码有误");
+                    throw new ApiException("帐号密码有误");
                 var token = await GetToken(request.Account, request.Password);
                 return ReturnStatus<UserSignInResponse>.Success("登录成功", new UserSignInResponse
                 {
@@ -110,7 +111,7 @@ namespace RK.Service.Impl
                 });
             }
             else
-                throw new Exception("该帐号不存在");
+                throw new ApiException("该帐号不存在");
         }
 
         public UserInfo GetUserByAccount(string account)
@@ -121,7 +122,7 @@ namespace RK.Service.Impl
         public ReturnStatus Update(UpdateUserRequest request)
         {
             if (!CheckCurrentUserValid(request.Id))
-                throw new Exception("无权限操作");
+                throw new ApiException("无权限操作");
 
             var user = _repository.Get(m => m.Id == request.Id);
             if (user != null)
@@ -137,7 +138,7 @@ namespace RK.Service.Impl
                 return ReturnStatus.Success("更新成功");
             }
             else
-                throw new Exception("该帐号不存在");
+                throw new ApiException("该帐号不存在");
         }
 
         private async Task<TokenModel> GetToken(string account, string password)
@@ -153,14 +154,14 @@ namespace RK.Service.Impl
 
                 if (disco.IsError)
                 {
-                    throw new Exception(disco.Error);
+                    throw new ApiException(disco.Error);
                 }
 
                 var tokenClient = new TokenClient(disco.TokenEndpoint, "pwd_client", "pwd_secret");
                 var tokenResponse = await tokenClient.RequestResourceOwnerPasswordAsync(account, password, "rk offline_access");
                 if (tokenResponse.IsError)
                 {
-                    throw new Exception(tokenResponse.Error);
+                    throw new ApiException(tokenResponse.Error);
                 }
                 return new TokenModel
                 {
@@ -215,7 +216,7 @@ namespace RK.Service.Impl
                     }
                     catch (Exception)
                     {
-                        throw new Exception("注册成功，获取 Token 失败，请重新登录");
+                        throw new ApiException("注册成功，获取 Token 失败，请重新登录");
                     }
 
                 }

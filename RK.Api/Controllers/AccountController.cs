@@ -9,7 +9,6 @@ using Microsoft.AspNetCore.Authorization;
 using RK.Infrastructure;
 using RK.Model.Dto.Request;
 using RK.Model.Dto.Reponse;
-using RK.Api.Common.Filters;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace RK.Api.Controllers

@@ -9,7 +9,7 @@ using System.Net.Http;
 using RK.Model.Dto.Reponse;
 using Microsoft.Extensions.Caching.Memory;
 using RK.Service;
-using RK.Api.Common.Exceptions;
+using RK.Infrastructure.Exceptions;
 
 namespace RK.Api.Controllers
 {
