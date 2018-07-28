@@ -42,7 +42,7 @@ namespace RK.Web.Controllers
         {
             if (!String.IsNullOrWhiteSpace(code) && !String.IsNullOrWhiteSpace(state))
             {
-                //if (HttpContext.Session.GetString("QC_State") == state)
+                if (HttpContext.Session.GetString("QC_State") == state)
                 {
                     //通过Authorization Code获取Access Token
                     var getTokenUrl = "https://graph.qq.com/oauth2.0/token" + $"?grant_type=authorization_code&client_id={AppId}&client_secret={AppKey}&code={code}&redirect_uri={RedirectUri}";
@@ -68,7 +68,6 @@ namespace RK.Web.Controllers
                         {
                             var openIdResult = await openIdClient.GetStringAsync(getOpenIdUrl);
                             openIdResult = openIdResult.Replace("callback(", "").Replace(");", "");
-                            //ViewBag.Result1 = openIdResult;
                             var qcOpenId = JsonHelper.Deserialize<QcOpenId>(openIdResult);
                             if (String.IsNullOrWhiteSpace(qcOpenId.error) && String.IsNullOrWhiteSpace(qcOpenId.error_description))
                             {
@@ -88,10 +87,8 @@ namespace RK.Web.Controllers
                                     {
                                         //使用Access Token以及OpenID来访问和修改用户数据
                                         var userInfoUrl = "https://graph.qq.com/user/get_user_info?" + $"oauth_consumer_key={AppId}&access_token={qcToken.access_token}&openid={qcOpenId.openid}";
-                                        //ViewBag.userInfoUrl = userInfoUrl;
                                         var infoResult = await infoClient.GetStringAsync(userInfoUrl);
                                         infoResult = infoResult.Replace("callback(", "").Replace(");", "");
-                                        //ViewBag.Result2 = infoResult;
                                         var qqUser = JsonHelper.Deserialize<QcUser>(infoResult);
                                         if (String.IsNullOrWhiteSpace(qqUser.error) && String.IsNullOrWhiteSpace(qqUser.error_description) && qqUser.ret == 0)
                                         {
@@ -100,7 +97,8 @@ namespace RK.Web.Controllers
                                                 Account = _userInfoService.GetRandomAccount("QQ"),
                                                 AvatarUrl = await FileHelper.DownAsync(qqUser.figureurl_qq_2.Replace(@"\/", "/"), "jpg"),
                                                 Nmae = qqUser.nickname,
-                                                Password = StringHelper.RndomStr(8)
+                                                Password = StringHelper.RndomStr(8),
+                                                QQOpenId = qcOpenId.openid
                                             });
                                         }
                                         else

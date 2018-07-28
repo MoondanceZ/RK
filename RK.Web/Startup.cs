@@ -92,7 +92,7 @@ namespace RK.Web
 
             app.UseMiddleware(typeof(ErrorWrappingMiddleware));
 
-            app.UseStaticFiles();
+            app.UseStaticFiles();//使用默认文件夹wwwroot 
             app.UseCookiePolicy();
 
             app.UseSession();

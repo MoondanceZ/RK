@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>RoundKing - 登陆跳转</title>
+    <title>RoundKing - 登录跳转</title>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
 </head>
 <body>
@@ -26,11 +26,13 @@
 @if (userInfo != null)
 {
     <script>
-        var userInfo = "@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.UserInfo))";
-        var token = "@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.Token))";
+        var userInfo = '@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.UserInfo))';
+        var token = '@Html.Raw(RK.Infrastructure.JsonHelper.Serialize(userInfo.Data.Token))';
 
         sessionStorage.setItem("User", userInfo);
         sessionStorage.setItem("Token", token);
+
+        window.location.href = window.location.href = window.location.href.split("//")[0] + "//" + window.location.host;
     </script>
 }
 else

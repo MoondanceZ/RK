@@ -9,18 +9,19 @@ namespace RK.Infrastructure
 {
     public class FileHelper
     {
-        const string IMAGE_FILE_PATH = @"File\Image\";
+        const string IMAGE_FILE_PATH = @"file\image\";
         public static async Task<string> DownAsync(string fileUrl, string fileExtension = "")
         {
             if (fileExtension == "")
                 fileExtension = Path.GetExtension(fileUrl);
             fileExtension = fileExtension.StartsWith(".") ? fileExtension : "." + fileExtension;
-            var roorDir = AppContext.BaseDirectory;
+            var roorDir = AppContext.BaseDirectory + "wwwroot\\";
             var filePath = roorDir + Path.Combine(IMAGE_FILE_PATH, DateTime.Now.ToString("yyyy-MM-dd"));
             if (!Directory.Exists(filePath))
                 Directory.CreateDirectory(filePath);
-            var fileFullPath = filePath + "\\" + Guid.NewGuid().ToString().Replace("-", "") + fileExtension;
-
+            var fileName = Guid.NewGuid().ToString().Replace("-", "") + fileExtension;
+            var fileFullPath = filePath + "\\" + fileName;
+            var returnFilePath = "/" + (Path.Combine(IMAGE_FILE_PATH, DateTime.Now.ToString("yyyy-MM-dd")) + "/" + fileName).Replace("\\", "/");
             using (HttpClient client = new HttpClient())
             {
                 var result = await client.GetStreamAsync(fileUrl);
@@ -31,7 +32,7 @@ namespace RK.Infrastructure
                     sw.Close();
                 }
             }
-            return fileFullPath;
+            return returnFilePath;
         }
     }
 }

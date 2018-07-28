@@ -45,7 +45,12 @@ namespace RK.Service.Impl
                 var user = new UserInfo
                 {
                     Account = request.Account,
-                    Password = EncryptHelper.AESEncrypt(request.Password)
+                    Password = EncryptHelper.AESEncrypt(request.Password),
+                    AvatarUrl = request.AvatarUrl,
+                    Name = request.Nmae,
+                    QQOpenID = request.QQOpenId,
+                    WeChatOpenId = request.WeChatOpenId,
+                    WeiboOpenId = request.WeiboOpenId
                 };
                 _repository.Add(user);
                 _unitOfWork.Commit();
