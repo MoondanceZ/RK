@@ -91,12 +91,11 @@ namespace RK.Api.Controllers
         {
             return _accountRecordService.Delete(id);
         }
-
-        [AllowAnonymous]
-        [HttpGet("Budget/{userId}")]
-        public ReturnStatus<BudgetResponse> Budget(int userId)
+        
+        [HttpGet("Info/{userId}")]
+        public ReturnStatus<AccountMonthInfoResponse> Info(int userId)
         {
-            return _accountRecordService.GetBudget(userId);
+            return _accountRecordService.GetInfo(userId);
         }
     }
 }

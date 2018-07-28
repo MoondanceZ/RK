@@ -4,12 +4,13 @@ using System.Text;
 
 namespace RK.Model.Dto.Reponse
 {
-    public class BudgetResponse
+    public class AccountMonthInfoResponse
     {
         public string StartDate { get; set; }
         public string EndDate { get; set; }
         public string Income { get; set; }
         public string Expend { get; set; }
+        public string AvgExpendPerDay { get; set; }
         public string LastMonthExpend { get; set; }
         public List<LastMonthExpendResponse> LastMonthTop3Expend { get; set; }
         public class LastMonthExpendResponse
