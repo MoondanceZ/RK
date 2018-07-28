@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using RK.Api.Common.Exceptions;
 using RK.Infrastructure;
+using RK.Infrastructure.Exceptions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,7 +46,7 @@ namespace RK.Api.Common.Middleware
                 code = HttpStatusCode.Unauthorized;
                 errorStr = exception.Message;
             }
-            else if (exception is WeChatException)
+            else if (exception is WeChatException || exception is ApiException)
             {
                 errorStr = exception.Message;
             }

@@ -11,7 +11,7 @@ namespace RK.Model
         [Key]
         public int Id { get; set; }
         /// <summary>
-        /// 类型:1,收入; 2,支出
+        /// 类型:0,收入; 1,支出
         /// </summary>
         [Required]
         public int Type { get; set; }

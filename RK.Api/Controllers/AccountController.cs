@@ -92,6 +92,7 @@ namespace RK.Api.Controllers
             return _accountRecordService.Delete(id);
         }
 
+        [AllowAnonymous]
         [HttpGet("Budget/{userId}")]
         public ReturnStatus<BudgetResponse> Budget(int userId)
         {

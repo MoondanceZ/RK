@@ -121,8 +121,7 @@ namespace RK.Service.Impl
 
         public ReturnStatus Update(UpdateUserRequest request)
         {
-            if (!CheckCurrentUserValid(request.Id))
-                throw new ApiException("无权限操作");
+            CheckCurrentUserValid(request.Id);
 
             var user = _repository.Get(m => m.Id == request.Id);
             if (user != null)

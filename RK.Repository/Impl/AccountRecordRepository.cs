@@ -5,6 +5,7 @@ using System.Text;
 using RK.Framework.Database;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using RK.Infrastructure.Enum;
 
 namespace RK.Repository.Impl
 {
@@ -27,20 +28,20 @@ namespace RK.Repository.Impl
 
         public decimal GetSumIncome(int userId, DateTime startDate, DateTime endDate)
         {
-            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == 1 && m.AccountDate >= startDate && m.AccountDate < endDate)
+            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == (int)AccountRecordTypeEnum.Income && m.AccountDate >= startDate && m.AccountDate < endDate)
                 .Sum(m => m.Amount);
         }
 
         public decimal GetSumExpend(int userId, DateTime startDate, DateTime endDate)
         {
-            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == 2 && m.AccountDate >= startDate && m.AccountDate < endDate)
+            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == (int)AccountRecordTypeEnum.Expend && m.AccountDate >= startDate && m.AccountDate < endDate)
                 .Sum(m => m.Amount);
         }
 
         public IEnumerable<AccountRecord> GetLastMonthTop3Expend(int userId, DateTime startDate, DateTime endDate)
         {
             return this.Dbset.Include(m => m.AccountType)
-                .Where(m => m.UserInfoId == userId && m.Type == 2 && m.AccountDate >= startDate && m.AccountDate < endDate)
+                .Where(m => m.UserInfoId == userId && m.Type == (int)AccountRecordTypeEnum.Expend && m.AccountDate >= startDate && m.AccountDate < endDate)
                 .OrderByDescending(m => m.Amount).Take(3);
         }
     }

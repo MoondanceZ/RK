@@ -190,7 +190,7 @@ namespace RK.Service.Impl
 
         public ReturnStatus<BudgetResponse> GetBudget(int userId)
         {
-            CheckCurrentUserValid(userId);
+            //CheckCurrentUserValid(userId);
             var startDate = DateTime.Now.AddDays(1 - DateTime.Now.Day).Date;
             var endDate = DateTime.Now.AddDays(1).Date;
             var lastMonth = DateTime.Now.AddMonths(-1);
@@ -206,7 +206,7 @@ namespace RK.Service.Impl
             var sumLastMonthExpend = _repository.GetSumExpend(userId, lastMonthStartDate, lastMonthEndDate);
 
             //上月总支出
-            var totalLastMonthExpend = _repository.GetSumExpend(userId, lastMonth.Date, startDate);
+            var totalLastMonthExpend = _repository.GetSumExpend(userId, lastMonthStartDate, startDate);
 
             var lastMonthTop3Expend = _repository.GetLastMonthTop3Expend(userId, lastMonthStartDate, lastMonthEndDate).ToList();
             var listLastMonthTop3Expend = new List<BudgetResponse.LastMonthExpendResponse>();
@@ -219,7 +219,7 @@ namespace RK.Service.Impl
                     listLastMonthTop3Expend.Add(new BudgetResponse.LastMonthExpendResponse
                     {
                         Expend = expendAmount.ToString("F2"),
-                        ExpendPercent = (double)(expendAmount / totalLastMonthExpend * 100),
+                        ExpendPercent = (expendAmount / totalLastMonthExpend * 100).ToString("F2"),
                         TypeCode = curTempExpend.AccountType.Code,
                         TypeName = curTempExpend.AccountType.Name
                     });
@@ -231,11 +231,11 @@ namespace RK.Service.Impl
             return ReturnStatus<BudgetResponse>.Success(null, new BudgetResponse
             {
                 StartDate = startDate.ToString("MM月dd日"),
-                EndDate = endDate.ToString("MM月dd日"),
+                EndDate = DateTime.Now.ToString("MM月dd日"),
                 Expend = sumExpend.ToString("F2"),
                 Income = sumIncome.ToString("F2"),
                 LastMonthExpend = sumLastMonthExpend.ToString("F2"),
-                LastMonthTop3Expend = listLastMonthTop3Expend;
+                LastMonthTop3Expend = listLastMonthTop3Expend
             });
         }
     }
