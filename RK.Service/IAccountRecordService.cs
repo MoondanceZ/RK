@@ -15,5 +15,6 @@ namespace RK.Service
         ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request);
         ReturnStatus<AccountResponse> Get(int id);
         ReturnStatus Delete(int id);
+        ReturnStatus<BudgetResponse> GetBudget(int userId);
     }
 }

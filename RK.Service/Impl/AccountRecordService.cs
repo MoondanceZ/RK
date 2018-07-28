@@ -12,6 +12,7 @@ using RK.Model.Dto.Reponse;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http;
+using RK.Infrastructure.Exceptions;
 
 namespace RK.Service.Impl
 {
@@ -25,8 +26,7 @@ namespace RK.Service.Impl
 
         public ReturnStatus<AccountResponse> Create(AccountRequest request)
         {
-            if (!CheckCurrentUserValid(request.UserId))
-                throw new Exception("无权限操作");
+            CheckCurrentUserValid(request.UserId);
             try
             {
                 var record = new AccountRecord
@@ -55,7 +55,7 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Create AccountRecord Error: {ex}");
-                throw new Exception("添加失败");
+                throw new ApiException("添加失败");
             }
         }
 
@@ -65,9 +65,8 @@ namespace RK.Service.Impl
             {
                 var record = _repository.GetAllLazy().Include(m => m.AccountType).Where(m => m.Id == id).FirstOrDefault();
                 if (record == null)
-                    throw new Exception("该记录不存在");
-                if (!CheckCurrentUserValid(record.UserInfoId))
-                    throw new Exception("无权限操作");
+                    throw new ApiException("该记录不存在");
+                CheckCurrentUserValid(record.UserInfoId);
 
                 return ReturnStatus<AccountResponse>.Success(null, new AccountResponse
                 {
@@ -91,8 +90,7 @@ namespace RK.Service.Impl
 
         public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
-            if (!CheckCurrentUserValid(request.UserId))
-                throw new Exception("无权限操作");
+            CheckCurrentUserValid(request.UserId);
 
             var records = _repository.GetAllLazy()
                 .Include(m => m.AccountType)
@@ -144,12 +142,11 @@ namespace RK.Service.Impl
 
         public ReturnStatus Update(int id, AccountRequest request)
         {
+            CheckCurrentUserValid(request.UserId);
 
             var record = _repository.Get(m => m.Id == id);
             if (record == null)
-                throw new Exception("更新失败，记录不存在");
-            if (!CheckCurrentUserValid(record.UserInfoId))
-                throw new Exception("无权限操作");
+                throw new ApiException("更新失败，记录不存在");
             try
             {
                 record.AccountDate = request.AccountDate;
@@ -167,7 +164,7 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Update AccountRecord Error: {ex}");
-                throw new Exception("更新失败");
+                throw new ApiException("更新失败");
             }
         }
 
@@ -176,9 +173,8 @@ namespace RK.Service.Impl
 
             var record = _repository.Get(m => m.Id == id);
             if (record == null)
-                throw new Exception("删除失败，记录不存在");
-            if (!CheckCurrentUserValid(record.UserInfoId))
-                throw new Exception("无权限操作");
+                throw new ApiException("删除失败，记录不存在");
+            CheckCurrentUserValid(record.UserInfoId);
             try
             {
                 _repository.Delete(record);
@@ -188,8 +184,59 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Delete AccountRecord Error: {ex}");
-                throw new Exception("删除失败");
+                throw new ApiException("删除失败");
             }
+        }
+
+        public ReturnStatus<BudgetResponse> GetBudget(int userId)
+        {
+            CheckCurrentUserValid(userId);
+            var startDate = DateTime.Now.AddDays(1 - DateTime.Now.Day).Date;
+            var endDate = DateTime.Now.AddDays(1).Date;
+            var lastMonth = DateTime.Now.AddMonths(-1);
+            var lastMonthStartDate = lastMonth.AddDays(1 - lastMonth.Day).Date;
+            var lastMonthEndDate = lastMonth.AddDays(1).Date;
+
+            //本月收入和支出
+            var sumIncome = _repository.GetSumIncome(userId, startDate, endDate);
+            var sumExpend = _repository.GetSumExpend(userId, startDate, endDate);
+
+            //上月收入和支出
+            var sumLastMonthIncome = _repository.GetSumIncome(userId, lastMonthStartDate, lastMonthEndDate);
+            var sumLastMonthExpend = _repository.GetSumExpend(userId, lastMonthStartDate, lastMonthEndDate);
+
+            //上月总支出
+            var totalLastMonthExpend = _repository.GetSumExpend(userId, lastMonth.Date, startDate);
+
+            var lastMonthTop3Expend = _repository.GetLastMonthTop3Expend(userId, lastMonthStartDate, lastMonthEndDate).ToList();
+            var listLastMonthTop3Expend = new List<BudgetResponse.LastMonthExpendResponse>();
+            for (int i = 0; i < 3; i++)
+            {
+                if (lastMonthTop3Expend != null && lastMonthTop3Expend.Count >= i + 1)
+                {
+                    var curTempExpend = lastMonthTop3Expend[i];
+                    var expendAmount = curTempExpend.Amount;
+                    listLastMonthTop3Expend.Add(new BudgetResponse.LastMonthExpendResponse
+                    {
+                        Expend = expendAmount.ToString("F2"),
+                        ExpendPercent = (double)(expendAmount / totalLastMonthExpend * 100),
+                        TypeCode = curTempExpend.AccountType.Code,
+                        TypeName = curTempExpend.AccountType.Name
+                    });
+                }
+                else
+                    listLastMonthTop3Expend.Add(null);
+            }
+
+            return ReturnStatus<BudgetResponse>.Success(null, new BudgetResponse
+            {
+                StartDate = startDate.ToString("MM月dd日"),
+                EndDate = endDate.ToString("MM月dd日"),
+                Expend = sumExpend.ToString("F2"),
+                Income = sumIncome.ToString("F2"),
+                LastMonthExpend = sumLastMonthExpend.ToString("F2"),
+                LastMonthTop3Expend = listLastMonthTop3Expend;
+            });
         }
     }
 }

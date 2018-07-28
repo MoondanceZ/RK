@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using RK.Framework.Database;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace RK.Repository.Impl
 {
@@ -21,6 +23,25 @@ namespace RK.Repository.Impl
             entity.Status = -1;
             entity.DeletedTime = DateTime.Now;
             base.Update(entity);
+        }
+
+        public decimal GetSumIncome(int userId, DateTime startDate, DateTime endDate)
+        {
+            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == 1 && m.AccountDate >= startDate && m.AccountDate < endDate)
+                .Sum(m => m.Amount);
+        }
+
+        public decimal GetSumExpend(int userId, DateTime startDate, DateTime endDate)
+        {
+            return this.Dbset.Where(m => m.UserInfoId == userId && m.Type == 2 && m.AccountDate >= startDate && m.AccountDate < endDate)
+                .Sum(m => m.Amount);
+        }
+
+        public IEnumerable<AccountRecord> GetLastMonthTop3Expend(int userId, DateTime startDate, DateTime endDate)
+        {
+            return this.Dbset.Include(m => m.AccountType)
+                .Where(m => m.UserInfoId == userId && m.Type == 2 && m.AccountDate >= startDate && m.AccountDate < endDate)
+                .OrderByDescending(m => m.Amount).Take(3);
         }
     }
 }

@@ -8,6 +8,7 @@ using RK.Model.Dto.Request;
 using RK.Infrastructure;
 using System.Linq;
 using Microsoft.AspNetCore.Http;
+using RK.Infrastructure.Exceptions;
 
 namespace RK.Service.Impl
 {
@@ -19,8 +20,7 @@ namespace RK.Service.Impl
 
         public ReturnStatus<List<AccountType>> GetAccountRecordTypes(int userInfoId)
         {
-            if (!CheckCurrentUserValid(userInfoId))
-                throw new Exception("无权限操作");
+            CheckCurrentUserValid(userInfoId);
             return ReturnStatus<List<AccountType>>.Success(string.Empty, _repository.GetMany(m => m.UserInfoId == 0 || m.UserInfoId == userInfoId).ToList());
         }
     }

@@ -12,8 +12,8 @@ namespace RK.Repository.Impl
 {
     public abstract class BaseRepository<T> : IBaseRepository<T> where T : class
     {
-        private readonly RkDbContext dataContext;
-        private readonly DbSet<T> dbset;
+        protected readonly RkDbContext DataContext;
+        protected readonly DbSet<T> Dbset;
 
         protected IDatabaseFactory DatabaseFactory
         {
@@ -21,39 +21,39 @@ namespace RK.Repository.Impl
             private set;
         }
 
-        protected RkDbContext DataContext
-        {
-            get
-            {
-                return dataContext;
-            }
-        }
+        //protected RkDbContext DataContext
+        //{
+        //    get
+        //    {
+        //        return dataContext;
+        //    }
+        //}
         
         public BaseRepository(IDatabaseFactory databaseFactory)
         {            
             DatabaseFactory = databaseFactory;
-            dataContext = databaseFactory.DataContext;
-            dbset = DataContext.Set<T>();
+            DataContext = databaseFactory.DataContext;
+            Dbset = DataContext.Set<T>();
         }
 
         public virtual void Add(T entity)
         {
-            dbset.Add(entity);
+            Dbset.Add(entity);
         }
 
         //新增方法
         public virtual void AddAll(IEnumerable<T> entities)
         {
-            dbset.AddRange(entities);
+            Dbset.AddRange(entities);
         }
         public virtual void BulkInsert(IEnumerable<T> entities)
         {
-            dataContext.BulkInsert(entities);
+            DataContext.BulkInsert(entities);
         }
         public virtual void Update(T entity)
         {
-            dbset.Attach(entity);
-            dataContext.Entry(entity).State = EntityState.Modified;
+            Dbset.Attach(entity);
+            DataContext.Entry(entity).State = EntityState.Modified;
         }
 
         //新增方法
@@ -61,54 +61,54 @@ namespace RK.Repository.Impl
         {
             foreach (T obj in entities)
             {
-                dbset.Attach(obj);
-                dataContext.Entry(obj).State = EntityState.Modified;
+                Dbset.Attach(obj);
+                DataContext.Entry(obj).State = EntityState.Modified;
             }
         }
         public virtual void BulkUpdate(IEnumerable<T> entities)
         {
-            dataContext.BulkUpdate(entities);
+            DataContext.BulkUpdate(entities);
         }
         public virtual void Delete(T entity)
         {
-            dbset.Remove(entity);
+            Dbset.Remove(entity);
         }
 
         public virtual void Delete(Expression<Func<T, bool>> predicate)
         {
-            IEnumerable<T> objects = dbset.Where<T>(predicate).AsEnumerable();
-            dbset.RemoveRange(objects);
+            IEnumerable<T> objects = Dbset.Where<T>(predicate).AsEnumerable();
+            Dbset.RemoveRange(objects);
         }
 
         //新增方法
         public virtual void DeleteAll(IEnumerable<T> entities)
         {
-            dbset.RemoveRange(entities);
+            Dbset.RemoveRange(entities);
         }
 
         public virtual IEnumerable<T> GetAll()
         {
-            return dbset.ToList();
+            return Dbset.ToList();
         }
 
         public virtual IEnumerable<T> GetMany(Expression<Func<T, bool>> predicate)
         {
-            return dbset.Where(predicate).ToList();
+            return Dbset.Where(predicate).ToList();
         }
 
         public T Get(Expression<Func<T, bool>> predicate)
         {
-            return dbset.Where(predicate).FirstOrDefault<T>();
+            return Dbset.Where(predicate).FirstOrDefault<T>();
         }
 
         public virtual IQueryable<T> GetAllLazy()
         {
-            return dbset.AsQueryable();
+            return Dbset.AsQueryable();
         }
 
         public bool IsExist(Expression<Func<T, bool>> predicate)
         {
-            return dbset.Any(predicate);
+            return Dbset.Any(predicate);
         }
     }
 }

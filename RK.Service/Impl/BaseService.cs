@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using RK.Framework.Database;
 using Microsoft.AspNetCore.Http;
 using RK.Infrastructure;
+using RK.Infrastructure.Exceptions;
 
 namespace RK.Service.Impl
 {
@@ -30,9 +31,12 @@ namespace RK.Service.Impl
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        protected bool CheckCurrentUserValid(int userId)
+        protected void CheckCurrentUserValid(int userId)
         {
-            return _httpContext.HttpContext.User.HasClaim("sub", EncryptHelper.AESEncrypt(userId.ToString()));
+            if (!_httpContext.HttpContext.User.HasClaim("sub", EncryptHelper.AESEncrypt(userId.ToString())))
+            {
+                throw new ApiException("无权限操作");
+            }
         }
     }
 }
