@@ -1,6 +1,5 @@
 ﻿@{
     Layout = null;
-    var str = System.IO.File.ReadAllText(@"./wwwroot/index.html");
 }
 
-@Html.Raw(str)
+@Html.Raw(System.IO.File.ReadAllText(@"./wwwroot/index.html"))
