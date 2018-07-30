@@ -41,7 +41,7 @@ namespace RK.Api.Controllers
             return _accountRecordService.Get(id);
         }
         
-        [HttpGet("List")]
+        [HttpGet("List")]        
         public ReturnPage<DateAccountResponse> GetList(AccountPageListRequest request)
         {
             if (!ModelState.IsValid)

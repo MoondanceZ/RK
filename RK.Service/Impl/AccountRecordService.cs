@@ -84,7 +84,7 @@ namespace RK.Service.Impl
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Query AccountRecord Error: {ex}");
-                throw ex;
+                throw new ApiException(ex.Message);
             }
         }
 
@@ -103,12 +103,14 @@ namespace RK.Service.Impl
             {
                 var groupData = records.GroupBy(m => m.AccountDate);
                 var dateList = groupData.Select(m => m.Key).ToList();
-                var monthRecords = _repository.GetMany(m => Convert.ToDateTime(m.AccountDate) >= DateTime.Now.AddDays(1 - DateTime.Now.Day).Date).Select(m => new
+                var monthRecords = _repository.GetMany(m => m.UserInfoId == request.UserId && Convert.ToDateTime(m.AccountDate) >= DateTime.Now.AddDays(1 - DateTime.Now.Day).Date && Convert.ToDateTime(m.AccountDate) < DateTime.Now.AddDays(1 - DateTime.Now.Day).AddMonths(1).Date).Select(m => new
                 {
+                    m.UserInfoId,
                     m.Type,
                     m.Amount
                 });
-                var dateRecords = _repository.GetMany(m => dateList.Contains(m.AccountDate));
+                _logger.LogInformation("monthRecords", JsonHelper.Serialize(monthRecords));
+                var dateRecords = _repository.GetMany(m => m.UserInfoId == request.UserId && dateList.Contains(m.AccountDate));
                 List<DateAccountResponse> listAccountResponseDate = new List<DateAccountResponse>();
                 foreach (var item in groupData)
                 {
@@ -144,7 +146,7 @@ namespace RK.Service.Impl
         {
             CheckCurrentUserValid(request.UserId);
 
-            var record = _repository.Get(m => m.Id == id);
+            var record = _repository.Get(m => m.Id == id && m.UserInfoId == request.UserId);
             if (record == null)
                 throw new ApiException("更新失败，记录不存在");
             try
