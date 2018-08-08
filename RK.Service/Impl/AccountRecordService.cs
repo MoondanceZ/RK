@@ -109,7 +109,7 @@ namespace RK.Service.Impl
                     m.Type,
                     m.Amount
                 });
-                _logger.LogInformation("monthRecords", JsonHelper.Serialize(monthRecords));
+
                 var dateRecords = _repository.GetMany(m => m.UserInfoId == request.UserId && dateList.Contains(m.AccountDate));
                 List<DateAccountResponse> listAccountResponseDate = new List<DateAccountResponse>();
                 foreach (var item in groupData)
