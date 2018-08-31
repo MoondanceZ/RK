@@ -9,22 +9,14 @@ namespace RK.Framework.Database.Impl
 {
     public class DatabaseFactory : IDatabaseFactory, IDesignTimeDbContextFactory<RkDbContext>
     {
-        private readonly RkDbContext _dbContext; // = new RkDbContext(new DbContextOptionsBuilder<RkDbContext>().UseMySql(ConfigHelper.GetConnectionString("ConnStr")).Options);
-
         public DatabaseFactory()
         {
-            _dbContext = _dbContext ?? CreateDbContext(null);
+            DataContext = DataContext ?? CreateDbContext(null);
         }
-        public RkDbContext DataContext
-        {
-            get
-            {
-                return _dbContext;
-            }
-        }
+        public RkDbContext DataContext { get; }
         public DatabaseFactory(RkDbContext dbContext)
         {
-            _dbContext = dbContext;
+            DataContext = dbContext;
         }
 
         public RkDbContext CreateDbContext(string[] args)
